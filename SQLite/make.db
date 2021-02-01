@@ -1,0 +1,16 @@
+import sqlite3
+
+conn = sqlite3.connect('forever-fit.db')
+
+conn.execute('''CREATE TABLE USER
+         (UNAME         VARCHAR(15)    NOT NULL,
+         FNAME          TEXT           NOT NULL,
+         LNAME          TEXT           NOT NULL,
+         DOB            DATE           NOT NULL,
+         PASSWORD       VARCHAR(50),
+         ISTRAINER      BOOL,
+         FITNESS GOALS  TEXT);''')
+
+
+
+

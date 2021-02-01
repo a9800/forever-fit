@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Trainee Signup</title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="theme-color" content="#7952b3" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="../static/main.css" />
+        <link rel="stylesheet" href="../static/dropdown.css" />
+        <script src="../static/js/dropdown.js"></script>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    
+    </head>
+
+    <body>
+        <header>
+            <nav class="navbar navbar-inverse" style="border-radius: 0px; margin-bottom: 0px;">
+                <div class="container-fluid">
+                    <div class="navbar-header mobile-center">
+                        <h3 class="logo" href="#">FOREVER FIT</h3>
+                    </div>
+                    <ul class="nav navbar-nav laptop">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/">Trainers</a></li>
+                        <li><a href="/">About Us</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right laptop">
+                        <li>
+                            <a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+                        </li>
+                    </ul>
+                    <button class="openbtn mobile" onclick="openNav()">☰</button>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <div class="sign-up-sheet">
+                <h1 style="margin-top: 0;">Trainee Sign Up</h1>
+                <p>Please fill in this form to create an account.</p>
+                <hr/>
+
+                <form method="post">
+                    <label for="fname"><b>Firstname</b></label>
+                    <input type="text" placeholder="Enter firstname" name="fname" required />
+
+                    <label for="lname"><b>Lastname</b></label>
+                    <input type="text" placeholder="Enter lastname" name="lname" required />
+
+                    <div style="padding-bottom: 10px;">
+                        <label for="fitness-goals"><b>Select Fitness Goals</b></label>
+                        <select id="myMulti" name="fitness-goals" size="7" multiple>
+                            <option value="Strength">Strength</option>
+                            <option value="Endurance">Endurance</option>
+                            <option value="Mobility">Mobility</option>
+                            <option value="Combat-Sports">Combat-Sports</option>
+                            <option value="Balance">Balance</option>
+                            <option value="Weight-Loss">Weight-Loss</option>
+                            <option value="weight-Gain">Weight-Gain</option>
+                        </select>
+                        <div id="mySidebar" class="sidebar">
+                            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+                            <a href="/">Home</a>
+                            <a href="#">Login</a>
+                        </div>
+                    </div>
+                    <br />
+                    <label for="birthday">Date Of Birth:</label>
+                    <br />
+                    <input type="date" id="birthday" name="birthday" class="birthday" required />
+                    <br />
+                    <br />
+                    <label for="uname"><b>Username</b></label>
+                    <input type="text" placeholder="Enter username" name="username" required />
+
+                    <label for="psw"><b>Password</b></label>
+                    <input type="password" placeholder="Enter Password" name="psw" required />
+
+                    <label for="psw-repeat"><b>Repeat Password</b></label>
+                    <input type="password" placeholder="Repeat Password" name="psw-repeat" required />
+
+                    <div class="clearfix">
+                        <button onclick="window.location='/SignUp'" class="cancelbtn">Cancel</button>
+                        <button onclick="submitGoals()" type="submit" class="signupbtn" >Sign Up</button>
+                    </div>
+                    <input id="goals" type="goals" name="goals" style="display: none;"/>
+                </form>
+            </div>
+        </main>
+        <script>
+            function openNav() {
+                document.getElementById("mySidebar").style.width = "250px";
+                document.getElementById("main").style.marginLeft = "250px";
+            }
+
+            function closeNav() {
+                document.getElementById("mySidebar").style.width = "0";
+                document.getElementById("main").style.marginLeft = "0";
+            }
+            var myDrop = new drop({
+                selector: "#myMulti",
+            });
+
+            var fitnessGoals = new Array();
+
+            function addGoal(elmnt){
+                fitnessGoals.push(elmnt.innerText);
+                console.log(fitnessGoals);
+            }
+
+            function removeGoal(elmnt){
+                console.log((elmnt.innerText.slice(0, -2)));
+                for (i = 0; i < fitnessGoals.length; i++){
+                    if(fitnessGoals[i]===elmnt.innerText.slice(0, -2)){
+                        delete fitnessGoals[i]
+                    }
+                }
+                console.log(fitnessGoals);
+                
+            }
+            
+            function submitGoals(){
+                document.getElementById('goals').value=fitnessGoals.toString();
+                console.log(fitnessGoals.toString());
+            }
+        </script>
+    </body>
+</html>
