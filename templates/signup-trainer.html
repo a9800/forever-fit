@@ -83,12 +83,9 @@
                     <label for="psw"><b>Password</b></label>
                     <input type="password" placeholder="Enter Password" name="psw" required />
 
-                    <label for="psw-repeat"><b>Repeat Password</b></label>
-                    <input type="password" placeholder="Repeat Password" name="psw-repeat" required />
-
                     <div class="clearfix">
                         <button onclick="window.location='/SignUp'" class="cancelbtn">Cancel</button>
-                        <button onclick="submitGoals()" type="submit" class="signupbtn" >Sign Up</button>
+                        <button type="submit" class="signupbtn" >Sign Up</button>
                     </div>
                     <input id="goals" type="goals" name="goals" style="display: none;"/>
                 </form>
@@ -125,11 +122,12 @@
                 console.log(fitnessGoals);
                 
             }
-            
-            function submitGoals(){
+
+            setInterval(function(){
                 document.getElementById('goals').value=fitnessGoals.toString();
                 console.log(fitnessGoals.toString());
-            }
+            },
+            500);
         </script>
     </body>
 </html>
