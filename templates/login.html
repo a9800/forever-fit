@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Forever Fit</title>
-
+        <title>Log In</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="theme-color" content="#7952b3" />
@@ -10,21 +9,12 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="../static/main.css" />
-        <link rel="stylesheet" href="../static/dropdown.css" />
-        <script src="../static/js/dropdown.js"></script>
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     </head>
 
     <body>
-        <div id="mySidebar" class="sidebar">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-            <a href="/">Home</a>
-            <a href="/Login">Login</a>
-        </div>
-
         <header>
             <nav class="navbar navbar-inverse" style="border-radius: 0px; margin-bottom: 0px;">
                 <div class="container-fluid">
@@ -33,12 +23,11 @@
                     </div>
                     <ul class="nav navbar-nav laptop">
                         <li><a href="/">Home</a></li>
-                        <li><a href="/">Trainers</a></li>
                         <li><a href="/">About Us</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right laptop">
                         <li>
-                            <a href="/Login"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+                            <a href="/SignUp"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
                         </li>
                     </ul>
                     <button class="openbtn mobile" onclick="openNav()">☰</button>
@@ -47,27 +36,28 @@
         </header>
 
         <main>
-            <div class="flex-container">
-                <div class="img-holder">
-                    <a href="SignUpTrainee">
-                        <img src="../static/images/legpress.jpeg" alt="WorkOut" class="image-1" />
+            <div id="mySidebar" class="sidebar">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+                <a href="/">Home</a>
+                <a href="/">About Us</a></
+                <a href="/SignUp">Sign Up</a>
+            </div>
+            <div class="sign-up-sheet">
+                <h1 style="margin-top: 0;">Login</h1>
+                <hr/>
 
-                        <div class="center">
-                            <div class="big">Trainee Account</div>
-                            <div class="small">Create a Trainee Account and get access to our variety of cretified fitness instructors</div>
-                        </div>
-                    </a>
-                </div>
-                <div class="img-holder">
-                    <a href="SignUpTrainer">
-                        <img src="../static/images/workout2.jpeg" alt="WorkOut" class="image-1" />
+                <form method="post">
+                    <label for="uname"><b>Username</b></label>
+                    <input type="text" placeholder="Enter username" name="username" required />
 
-                        <div class="center">
-                            <div class="big">Trainer Account</div>
-                            <div class="small">Create a Trainer Account to increase your clients</div>
-                        </div>
-                    </a>
-                </div>
+                    <label for="psw"><b>Password</b></label>
+                    <input type="password" placeholder="Enter Password" name="psw" required />
+
+                    <div class="clearfix">
+                        <button onclick="window.location='/'" class="cancelbtn">Cancel</button>
+                        <button type="submit" class="signupbtn" >Sign Up</button>
+                    </div>
+                </form>
             </div>
         </main>
         <script>
@@ -80,13 +70,10 @@
                 document.getElementById("mySidebar").style.width = "0";
                 document.getElementById("main").style.marginLeft = "0";
             }
-            var myDrop = new drop({
-                selector: "#myMulti",
-            });
         </script>
-        <div class="page-footer">
+        <footer class="page-footer">
             <p>Copyright &copy; 2021 Forever Fit</p>
-            <small>This page is last modified on Feb, 2021</small>
-        </div>
+            <small>This page is last modified on Feb, 2020</small>
+        </footer
     </body>
 </html>

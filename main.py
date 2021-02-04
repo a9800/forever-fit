@@ -1,70 +1,32 @@
-from flask import Flask, request, render_template, redirect
-import sqlite3
+from flask import Flask
+from flask_login import current_user, login_user, LoginManager, login_required, UserMixin
+from flask_sqlalchemy import SQLAlchemy
+import os
 
 app = Flask(__name__)
+login = LoginManager()
 
-@app.route("/")
-def home():
-    return render_template('index.html')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///forever-fit.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
-@app.route('/SignUp')
-def SignUp():
-    return render_template('signup.html')
 
-@app.route('/SignUpTrainee',methods = ['POST', 'GET'])
-def SignUpTrainee():
-    if request.method == 'GET':
-        return render_template('signup-trainee.html')
-
-    if request.method == 'POST':
-        form_data = request.form
-        print(form_data)
-        # Boolean to check if username is taken
-        created = create_user(form_data, "True")
-        return redirect('/')
-        
-@app.route('/SignUpTrainer',methods = ['POST', 'GET'])
-def SignUpTrainer():
-    if request.method == 'GET':
-        return render_template('signup-trainer.html')
-
-    if request.method == 'POST':
-        form_data = request.form
-        print(form_data)
-        # Boolean to check if username is taken
-        created = create_user(form_data, "True")
-        return redirect('/')
-        
-def create_user(form_data, is_trainer):
-    conn = sqlite3.connect('forever-fit.db')
-
-    user = conn.execute("SELECT COUNT(*) AS NUMUSERS FROM USERS WHERE \
-                         UNAME = '"+form_data["username"]+"';")
+if __name__ == "__main__":  
+    from routes import *
+    from sql_db import *
+    login.init_app(app)
+    login.login_view = 'Login'
     
-    for row in user:
-        num_users = (row[0])
+    db.init_app(app)
+    @app.before_first_request
+    def create_table():
+        db.create_all()
+
+    @login.user_loader
+    def load_user(uname):
+        return User.query.get(uname)
+
+    SECRET_KEY = os.urandom(32)
+    app.config['SECRET_KEY'] = SECRET_KEY
     
-    if (num_users > 0):
-        conn.commit()
-        return False
-    else:
-        conn.execute("INSERT INTO users (UNAME,FNAME,LNAME,DOB,PASSWORD,ISTRAINER,FITNESS_GOALS) \
-                      VALUES (\
-                      '"+form_data["username"]+"',\
-                      '"+form_data["fname"]+"',\
-                      '"+form_data["lname"]+"',\
-                      '"+form_data["birthday"]+"',\
-                      '"+form_data["psw"]+"',\
-                      "+is_trainer+",\
-                      '"+form_data["goals"]+"')");
-
-        user = conn.execute("SELECT COUNT(*) AS NUMUSERS FROM USERS")
-        for row in user:
-            print(row[0])
-    
-        conn.commit()
-        return True
-
-
-if __name__ == "__main__":
     app.run()
