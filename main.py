@@ -10,13 +10,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///forever-fit.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-
 if __name__ == "__main__":  
     from routes import *
     from sql_db import *
     login.init_app(app)
     login.login_view = 'Login'
-    
+
     db.init_app(app)
     @app.before_first_request
     def create_table():

@@ -4,8 +4,6 @@ from form import *
 from sql_db import *
 from main import app, login
 
-
-
 @app.route("/")
 def home():
     return render_template('index.html')
