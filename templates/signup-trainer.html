@@ -47,6 +47,17 @@
                 <hr/>
 
                 <form method="post">
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div style="border-radius: 5px; background-color: #e54b4b; padding-top: 5px; 
+                                    padding-bottom: 3px; width: 200px; margin-bottom: 20px; 
+                                    display:flex; justify-content: center;">
+                        {% for message in messages %}
+                            <p style="color: white;">{{ message }}</p>
+                        {% endfor %}
+                        </div>
+                      {% endif %}
+                    {% endwith %}
                     <label for="fname"><b>Firstname</b></label>
                     <input type="text" placeholder="Enter firstname" name="fname" required />
 
@@ -74,7 +85,8 @@
                     <br />
                     <label for="birthday">Date Of Birth:</label>
                     <br />
-                    <input type="date" id="birthday" name="birthday" class="birthday" required />
+                    <input type="date" id="birthday" name="birthday" 
+                           class="birthday"  min="1900-01-01" max="2005-12-31"required />
                     <br />
                     <br />
                     <label for="uname"><b>Username</b></label>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Home</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="theme-color" content="#7952b3" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="../static/main.css" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet" />
+    </head>
+
+    <body>
+        <header>
+            <nav class="navbar navbar-inverse" style="border-radius: 0px; margin-bottom: 0px;">
+                <div class="container-fluid">
+                    <div class="navbar-header mobile-center">
+                        <h3 class="logo" href="#">FOREVER FIT</h3>
+                    </div>
+                    <ul class="nav navbar-nav laptop">
+                        <li><a href="/">Home</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right laptop">
+                        <li>
+                            <a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
+                        </li>
+                    </ul>
+                    <button class="openbtn mobile" onclick="openNav()">☰</button>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <div class=" widget-holder">
+                <div class="widget">
+                    <div class="big">Upcoming Sessions</div>
+                    <hr>
+                    <div class="small">You have no upcoming sessions, book one with one of our trainers</div>
+                    <br>
+                    <a href="/TrainerSearch" class="btn btn-primary active" role="button">Trainer Search</a>
+                </div>
+                <div class="widget">
+                    <div class="big">Upcoming Sessions</div>
+                    <hr>
+                    <div class="small">You have no upcoming sessions, book one with one of our trainers</div>
+                    <br>
+                    <a href="/TrainerSearch" class="btn btn-primary active" role="button">Trainer Search</a>
+                </div>
+            </div>
+        </main>
+        <script>
+            function openNav() {
+                document.getElementById("mySidebar").style.width = "250px";
+                document.getElementById("main").style.marginLeft = "250px";
+            }
+
+            function closeNav() {
+                document.getElementById("mySidebar").style.width = "0";
+                document.getElementById("main").style.marginLeft = "0";
+            }
+        </script>
+        <footer class="page-footer">
+            <p>Copyright &copy; 2021 Forever Fit</p>
+            <small>This page is last modified on Feb, 2020</small>
+        </footer>
+    </body>
+</html>

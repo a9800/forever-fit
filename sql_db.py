@@ -10,7 +10,6 @@ class User(UserMixin,db.Model):
     password = db.Column(db.String(120), nullable=False)
     isTrainer = db.Column(db.Boolean, nullable = False)
     fitnessGoals = db.Column(db.String(120), nullable=True)
-    id = username
 
     def set_password(self,password):
         self.password = generate_password_hash(password)
@@ -21,9 +20,11 @@ class User(UserMixin,db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
-def user_exits(uname):
-        return bool(User.query.filter_by(username = uname).first)
+    def get_id(self):
+           return (self.username)
 
+def user_exits(uname):
+    return bool(User.query.filter_by(username=uname).first())
 
 if __name__ == "__main__":
     db.create_all()
