@@ -91,7 +91,7 @@ def Home():
 @app.route('/TrainerSearch')
 #@login_required
 def TrainerSearch():
-    return render_template('trainer-search.html')
+    return render_template('trainer-search.html', trainers = get_trainers())
 
 @app.route('/logout')
 def logout():

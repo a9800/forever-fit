@@ -26,5 +26,9 @@ class User(UserMixin,db.Model):
 def user_exits(uname):
     return bool(User.query.filter_by(username=uname).first())
 
+def get_trainers():
+    print(User.query.filter_by(isTrainer = True).all())
+    return User.query.filter_by(isTrainer = True).all()
+
 if __name__ == "__main__":
     db.create_all()
