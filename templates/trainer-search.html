@@ -9,16 +9,21 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="../static/main.css" />
+        <link rel="stylesheet" href="../static/dropdown.css" />
+        <script src="../static/js/dropdown.js"></script>
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     </head>
 
     <body>
         <header>
             <nav class="navbar navbar-inverse" style="border-radius: 0px; margin-bottom: 0px;">
                 <div class="container-fluid">
+                    
                     <div class="navbar-header mobile-center">
+                        <button class="openbtn mobile" onclick="openNav()">☰</button>
                         <h3 class="logo" href="#">FOREVER FIT</h3>
                     </div>
                     <ul class="nav navbar-nav laptop">
@@ -29,34 +34,76 @@
                             <a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
                         </li>
                     </ul>
-                    <button class="openbtn mobile" onclick="openNav()">☰</button>
+                    
                 </div>
             </nav>
+            <hr class="header-hr"/>
         </header>
 
         <main>
-            <div id="mySidebar" class="sidebar">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                <a href="/SignUp">Home</a>
-                <a href="#">Trainer Search</a>
-            </div>
+            <form method="post" class="t-options">
+                <div class="trainer-options">
+                    <div class="f-column tgoals">
+                        <label>Filter By Training Goals</label>
+                        <select id="myMulti" name="fitness-goals" size="7" multiple>
+                            <option value="Strength">Strength</option>
+                            <option value="Endurance">Endurance</option>
+                            <option value="Mobility">Mobility</option>
+                            <option value="Combat-Sports">Combat-Sports</option>
+                            <option value="Balance">Balance</option>
+                            <option value="Weight-Loss">Weight-Loss</option>
+                            <option value="weight-Gain">Weight-Gain</option>
+                        </select>
+                    </div>
+                    <div id="mySidebar" class="sidebar">
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+                        <a href="/SignUp">Home</a>
+                        <a href="#">Trainer Search</a>
+                        <a href="/logout">Log Out</a>
+                    </div>
+                    
+                    <div class="f-column">
+                        <label for="sortby" style="margin-bottom: 7px;">Sort By:</label>
+                            <select id="sortby" name="sortby" style="color: black; height:50px;">
+                              <option value="none">None</option>
+                              <option value="volvo">Rating</option>
+                              <option value="saab">Amount of reviews</option>
+                              <option value="opel">Age</option>
+                            </select>
+                    </div>    
+                </div>
+                <div class="filter-div">
+                    <button type="submit" class="filter" >Apply Filter</button>
+                </div>
+                <hr>
+            </form>
             <div class="trainer-holder">
                 {% for trainer in trainers %}
                 <div class="trainer-widget">
                     <div class="trainer-image">
                         <img src="../static/images/profile-picture.jpeg" alt="ProfilePicture" class="profile-picture">
                     </div>
-                    <div class = "trainer-info">
-                        <div class="trainer-name big">
-                            <p>{{ trainer.fname }} {{ trainer.lname }}</p>
+                    <div class="flex-column">
+                        <div class = "trainer-info">
+                            <div class="trainer-name big">
+                                <p>{{ trainer.fname }} {{ trainer.lname }}</p>
+                            </div>
+                            <hr style="width: 100%; margin-top: 5px; margin-bottom:5px">
+                            <div class="small trainer-details">
+                                <p>DOB: {{ trainer.dob }}</p>
+                                <p>Training Areas: {{ trainer.fitnessGoals }}</p>
+                                <p>Rating: 3/5 (152 reviews)</p>
+                            </div>
                         </div>
-                        <hr style="width: 100%; margin-top: 5px; margin-bottom:5px">
-                        <div class="small trainer-details">
-                            <p>DOB: {{ trainer.dob }}</p>
-                            <p>Training Areas: {{ trainer.fitnessGoals }}</p>
+                        <div class="message-button">
+                            <a href="/" class="btn btn-primary active mbtn" role="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
+                                    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                </svg>
+                                Message
+                            </a>
                         </div>
                     </div>
-                    
                 </div>
                 {% endfor %}
             </div>
@@ -72,10 +119,9 @@
                 document.getElementById("mySidebar").style.width = "0";
                 document.getElementById("main").style.marginLeft = "0";
             }
+            var myDrop = new drop({
+                selector: "#myMulti",
+            });
         </script>
-        <footer class="page-footer">
-            <p>Copyright &copy; 2021 Forever Fit</p>
-            <small>This page is last modified on Feb, 2020</small>
-        </footer>
     </body>
 </html>

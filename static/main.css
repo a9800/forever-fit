@@ -4,6 +4,7 @@
   --red: #e54b4b;
   --lightred: #f0c1c1;
   --blue: #4282f8;
+  --grey: #222222
 }
 @media (max-width : 871px) {
   .sidebar {
@@ -18,10 +19,11 @@
  }
   .mobile-center{
       display: flex;
-      justify-content: space-between;
+      position: relative;
  }
   .container-fluid{
       padding: 0px;
+      
  }
   .sign-up-sheet{
       padding-left: 5%;
@@ -77,13 +79,35 @@
   .trainer-name{
     font-size: 15px 
   }
-  
+ 
+  .mobile{
+    width: 65px;
+    display: flex;
+    align-content: center;
+    padding-left: 27px;
+    padding-right: 20px;
+  }
+  .logo{
+    position: absolute;
+    top: 50%;
+    left: 36%;
+    margin: -16px 0 0 -16px; /* apply negative top and left margins to truly center the element */
+  }
+  .widget{
+    margin-top: 30px;
+  }
+  .widget-holder{
+    padding-top: 0px;
+    margin-top: 0px;
+  }
 }
 @media (min-width : 872px) {
+  .container-fluid{
+    margin-bottom: 10px;
+  }
   .navbar{
       padding-left: 15%;
       padding-right: 15%;
-      padding-bottom: 10px;
  }
   .navbar-nav{
       padding-top: 10px;
@@ -140,31 +164,37 @@
       flex-direction: row;
  }
 }
+
+@media (min-width : 1446px) {
 .widget-holder{
   padding-left: 15%;
   padding-right: 15%;
-  margin-top: 100px;
-  margin-bottom:100px;
+  padding-top: 30px;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
 }
-@media (max-width : 1446px) {
-  .widget-holder{
-      margin-top: 10px;
-      padding-left: 5%;
-      padding-right: 5%;
-      display: flex;
-      flex-direction: column;
- }
-}
-.image-1:hover{
-  opacity: 60%;
 }
 body{
   font-family: 'Roboto', sans-serif;
   background-color: var(--black);
 }
+
+@media (max-width : 1446px) {
+  .widget-holder{
+      padding-left: 5%;
+      padding-right: 5%;
+      display: flex;
+      flex-direction: column;
+ }
+ .widget{
+   margin-top: 30px;
+ }
+}
+.image-1:hover{
+  opacity: 60%;
+}
+
 main{
   background-color: var(--black);
   display: block;
@@ -173,6 +203,11 @@ main{
 }
 input{
   color: black;
+}
+.header-hr{
+  margin-top: 0px;
+  margin-bottom: 0px;
+  border: 1px solid var(--blue);
 }
 .image{
   border-radius: 10px;
@@ -223,11 +258,10 @@ input{
   margin-left: 50px;
 }
 .openbtn {
-  font-size: 20px;
+  font-size: 30px;
   cursor: pointer;
-  background-color: #111;
+  background-color: #222222;
   color: white;
-  padding: 10px 15px;
   border: none;
 }
 .openbtn:hover {
@@ -416,11 +450,10 @@ button:hover {
 }
 .trainer-widget {
   border-radius: 10px;
-  margin-top: 30px;
   background-color: #222222;
-  padding: 5px 5px 5px 5px;
   display: flex;
   flex-direction: row;
+  margin-bottom: 30px;
 }
 .trainer-image{
   width:100px;
@@ -430,7 +463,28 @@ button:hover {
   width: 100%;
 }
 .trainer-info {
-  width: 65%;
+  width: 98%;
+}
+.flex-column{
+  width: 100%;
+}
+.message-button{
+  position: relative;
+  height: 30px;
+}
+.mbtn{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+.bi{
+  position:relative; 
+  bottom: -4px;
+}
+
+.trainer-options{
+  display: flex;  
+  flex-wrap: wrap;
 }
 
 @media (max-width : 1065px) {
@@ -440,6 +494,15 @@ button:hover {
   }
   .trainer-image{
     padding-top : 5px;
+  }
+
+  .trainer-widget{
+    padding: 5px 5px 5px 5px;
+  }
+
+  .t-options{
+    padding-left:5%;
+    padding-right:5%;
     
   }
 }
@@ -452,6 +515,64 @@ button:hover {
 
   .trainer-image{
     padding-top : 18px;
-    
+  }
+
+  .trainer-widget{
+    padding: 10px 10px 10px 10px;
+  }
+  
+  .t-options{
+    padding-left:30%;
+    padding-right:30%;
+    padding-top: 30px;
   }
 }
+
+.trainer-options{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.f-column{
+  padding-top:20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown{
+  background-color: var(--grey);
+  border-color: var(--white);
+  height: 40px;
+}
+
+.filter{
+  width: 150px;
+  
+}
+
+.filter-div{
+  display: flex;
+  padding-top: 20px;
+}
+
+@media (min-width : 711px){
+  .tgoals{
+    width: 75%;
+  }
+
+  .filter-div{
+    justify-content: flex-end;
+    padding-right: 10px;
+  }
+}
+
+@media (max-width : 711px){
+  .tgoals{
+    width: 100%;
+  }
+  .filter-div{
+    justify-content: center;
+  }
+}
+
