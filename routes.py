@@ -33,6 +33,11 @@ def SignUpTrainee():
             return redirect('SignUpTrainee')
         
         else:
+            # Changing goals from csv to array
+            goals = form['goals'].split(",")
+            # Removing empty elemets and sorting it alphabetically
+            goals = sorted([i for i in goals if i])
+
             register = User(username = form['username'], fname = form['fname'],
                             lname = form['lname'], dob = form['birthday'], isTrainer = False,
                             fitnessGoals = form['goals'])
@@ -58,6 +63,11 @@ def SignUpTrainer():
             return redirect('SignUpTrainer')
         
         else:
+            # Changing goals from csv to array
+            goals = form['goals'].split(",")
+            # Removing empty elemets and sorting it alphabetically
+            goals = sorted([i for i in goals if i])
+
             register = User(username = form['username'], fname = form['fname'],
                             lname = form['lname'], dob = form['birthday'], isTrainer = True,
                             fitnessGoals = form['goals'])
