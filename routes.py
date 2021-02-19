@@ -2,8 +2,12 @@ from flask import Flask, flash, request, render_template, redirect
 from flask_login import current_user, login_user, login_required, logout_user
 from form import *
 from sql_db import *
-from main import app, login
+from main import app, login, socketio
+from flask_socketio import send, join_room, leave_room
+from time import localtime, strftime
 
+
+ROOMS = ["lounge","news","games","coding"]
 @app.route("/")
 def home():
     if current_user.is_authenticated:
@@ -68,6 +72,7 @@ def SignUpTrainer():
             # Removing empty elemets and sorting it alphabetically
             goals = sorted([i for i in goals if i])
 
+            print(goals)
             register = User(username = form['username'], fname = form['fname'],
                             lname = form['lname'], dob = form['birthday'], isTrainer = True,
                             fitnessGoals = form['goals'])
@@ -104,6 +109,46 @@ def TrainerSearch():
     return render_template('trainer-search.html', trainers = get_trainers())
 
 @app.route('/logout')
+#@login_required
 def logout():
     logout_user()
     return redirect('/')
+
+@app.route('/chat/<uname>')
+@login_required
+def sessions(uname):
+    messages = ChatHistory.query.all()
+    
+    print("\n\n\n",messages,"\n\n\n")
+    return render_template('session.html',uname = uname, curr_uname = current_user.username, 
+                            rooms=ROOMS, messages = messages)
+                    
+
+@socketio.on('message')
+def message(data):
+
+    message = ChatHistory(message=data['msg'],room=data['room'],
+                          date_sent=strftime('%b-%d %I:%M%p',localtime()))
+    db.session.add(message)
+    db.session.commit()
+
+    send({'msg': data['msg'], 'uname': data['uname'],
+          'time_stamp':strftime('%b-%d %I:%M%p',localtime())},
+          room = data['room'])
+
+@socketio.on('join')
+def join(data):
+
+    join_room(data['room'])
+    send({'msg':data['uname'] + " has joined the " + data['room'] + "room."},
+          room=data['room']
+         )
+    print(data['room'])
+
+@socketio.on('leave')
+def leave(data):
+
+    leave_room(data['room'])
+    send({'msg': data['uname'] +" has left the " + data['room'] + "room."},
+          room=data['room']
+         )

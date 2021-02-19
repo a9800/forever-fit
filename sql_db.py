@@ -23,6 +23,12 @@ class User(UserMixin,db.Model):
     def get_id(self):
            return (self.username)
 
+class ChatHistory(UserMixin,db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    message = db.Column(db.String(500))
+    room = db.Column(db.String(500))
+    date_sent =db.Column(db.String(50))
+
 def user_exits(uname):
     return bool(User.query.filter_by(username=uname).first())
 

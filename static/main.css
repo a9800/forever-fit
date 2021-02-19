@@ -556,15 +556,12 @@ button:hover {
   padding-top: 20px;
 }
 
-@media (min-width : 711px){
-  .tgoals{
-    width: 75%;
-  }
+.chat-btn{
+  padding-left: 5%;
+}
 
-  .filter-div{
-    justify-content: flex-end;
-    padding-right: 10px;
-  }
+.room:hover {
+  cursor: pointer;
 }
 
 @media (max-width : 711px){
@@ -574,5 +571,52 @@ button:hover {
   .filter-div{
     justify-content: center;
   }
+  
+  .chatbox{
+    padding-right: 0;
+    padding-left: 0;
+    padding-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  .rooms{
+    display: none;
+    background-color: var(--grey);
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-btn{
+    display: initial;
+  }
 }
+@media (min-width : 711px){
+  .tgoals{
+    width: 75%;
+  }
 
+  .filter-div{
+    justify-content: flex-end;
+    padding-right: 10px;
+  }
+  .chatbox{
+    padding-right: 30%;
+    padding-left:  30%;
+    padding-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  .chat{
+    width: 70%;
+  }
+  .rooms{
+    display: initial;
+    background-color: --white;
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-btn{
+    display: none;
+  }
+}

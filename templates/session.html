@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Home</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="theme-color" content="#7952b3" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="../static/main.css" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet" />      
+    </head>
+
+    <body>
+        <header>
+            <nav class="navbar navbar-inverse" style="border-radius: 0px; margin-bottom: 0px;">
+                <div class="container-fluid">
+                    <div class="navbar-header mobile-center">
+                        <button class="openbtn mobile" onclick="openNav()">☰</button>
+                        <h3 class="logo" href="#">FOREVER FIT</h3>
+                    </div>
+                    <ul class="nav navbar-nav laptop">
+                        <li><a href="/Home">Home</a></li>
+                        <li><a href="/TrainerSearch">Trainer Search</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right laptop">
+                        <li>
+                            <a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <hr class="header-hr"/>
+        </header>
+
+        <main style="padding-top:10px">
+            <div class="chat-btn">
+                <a onclick="openChats()" >>Chats</a>
+            </div>
+            <div class="chatbox">
+                
+                <div class="rooms" id="rooms">
+                    {% for room in rooms %}
+                        <a id="select-room" class="room">{{room|title}}</a>
+                    {% endfor %}
+                </div>
+
+                <p style="display: none;" id="username">{{uname}}</p>
+                <p style="display: none;" id="curr_uname">{{curr_uname}}</p>
+                <script type = "text/javascript">
+                    var uname = document.getElementById('username').innerText
+                    console.log(uname)
+                    const curr_uname = document.getElementById('curr_uname').innerText
+                    console.log(curr_uname)
+                </script>
+                
+                <div class="chat">
+                    <div class="chat-holder">
+                        <div id="chat_history">
+                            
+                            {% for msg in messages %}
+                                
+                                    <p>{{msg.message }}</p>
+                                    <p>{{msg.room}}</p>
+                                    <p>{{msg.date_sent}}</p>
+                                    <p>{{room}}</p>
+
+                            {% endfor %}
+                        </div>
+                        <div id="display_message_section">
+
+                        </div>
+                    </div>
+
+                    <div class="input-area">
+                        <input type="text" id="user_message" placeholder="Type Here" autocomplete="off">
+                        <button type="button" id="send_message">SEND</button>
+                    </div>
+                </div>
+
+                <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+                
+            </div>
+            <p id="curr_room" style="display: none;"></p>
+            <script src="/static/js/socketio.js"></script>
+            <script src="/static/js/chat_page.js"></script>
+        </main>
+        <script>
+            function openNav() {
+                document.getElementById("mySidebar").style.width = "250px";
+                document.getElementById("main").style.marginLeft = "250px";
+            }
+
+            function closeNav() {
+                document.getElementById("mySidebar").style.width = "0";
+                document.getElementById("main").style.marginLeft = "0";
+            }
+
+            function openChats() {
+                if (document.getElementById("rooms").style.display === 'none'){
+                    document.getElementById("rooms").style.display = 'flex';
+                }else{
+                    document.getElementById("rooms").style.display ='none';
+                }
+            }
+            
+        </script>
+    </body>
+</html>
