@@ -27,9 +27,9 @@ class User(UserMixin,db.Model):
 
 class ChatHistory(UserMixin,db.Model):
     __tablename__ = 'chat_history'
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     message = db.Column(db.String(500))
-    room = db.Column(db.String(500),db.ForeignKey('user_rooms.id'))
+    room = db.Column(db.String(500))
     date_sent =db.Column(db.String(50))
     uname = db.Column(db.String(80),db.ForeignKey('user.username'))
 
@@ -46,10 +46,7 @@ def get_trainers():
     print(User.query.filter_by(isTrainer = True).all())
     return User.query.filter_by(isTrainer = True).all()
 
-def room_exists(trainee_uname,trainer_uname):
-    print("\n\n\n\n\nROOM EXISTS\n\n\n\n",bool(UserRooms.query.filter_by(trainee_username=trainee_uname,
-                                                       trainer_username=trainer_uname).first()))
-    
+def room_exists(trainee_uname,trainer_uname):  
     return bool(UserRooms.query.filter_by(trainee_username=trainee_uname,
                                           trainer_username=trainer_uname).first())
 
@@ -60,8 +57,11 @@ def get_room(trainee_uname,trainer_uname):
 def get_rooms_by_trainee_id(uname):
     return UserRooms.query.filter_by(trainee_username = uname).all()
 
+def get_chats():
+    return ChatHistory.query.all()
+
 def get_chat_history(room):
-    return ChatHistory.query.filter_by(id = room).all()
+    return ChatHistory.query.filter_by(room = room).all()
 
 if __name__ == "__main__":
     db.create_all()

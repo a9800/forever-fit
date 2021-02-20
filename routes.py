@@ -5,6 +5,7 @@ from sql_db import *
 from main import app, login, socketio
 from flask_socketio import send, join_room, leave_room
 from time import localtime, strftime
+from sqlalchemy import inspect
 
 @app.route("/")
 def home():
@@ -127,14 +128,14 @@ def sessions(uname):
 
     messages = get_chat_history(curr_room.id)
 
-    print("\n\n\n",messages,"\n\n\n")
+    print("\n\n\n",str(messages),"\n\n\n")
     return render_template('session.html',uname = uname, curr_uname = current_user.username, 
                             rooms=ROOMS, messages = messages, curr_room = curr_room)
                     
 
 @socketio.on('message')
 def message(data):
-
+    print(data['room_id'])
     message = ChatHistory(message=data['msg'],room=data['room_id'], uname = current_user.username,
                           date_sent=strftime('%b-%d %I:%M%p',localtime()))
     db.session.add(message)
