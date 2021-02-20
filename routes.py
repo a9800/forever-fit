@@ -91,7 +91,6 @@ def Login():
         user = User.query.filter_by(username = username).first()
         
         if user is not None and user.check_password(request.form['psw']):
-            print(user is not None and user.check_password(request.form['psw']))
             login_user(user)
             return redirect('Home')
      
@@ -128,7 +127,6 @@ def sessions(uname):
 
     messages = get_chat_history(curr_room.id)
 
-    print("\n\n\n",str(messages),"\n\n\n")
     return render_template('session.html',uname = uname, curr_uname = current_user.username, 
                             rooms=ROOMS, messages = messages, curr_room = curr_room)
                     
@@ -152,7 +150,6 @@ def join(data):
     send({'msg':data['uname'] + " has joined the " + data['room'] + " room."},
           room=data['room']
          )
-    print(data['room'])
 
 @socketio.on('leave')
 def leave(data):
