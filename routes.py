@@ -6,8 +6,6 @@ from main import app, login, socketio
 from flask_socketio import send, join_room, leave_room
 from time import localtime, strftime
 
-
-ROOMS = ["lounge","news","games","coding"]
 @app.route("/")
 def home():
     if current_user.is_authenticated:
@@ -117,17 +115,27 @@ def logout():
 @app.route('/chat/<uname>')
 @login_required
 def sessions(uname):
-    messages = ChatHistory.query.all()
-    
+    if(not room_exists(current_user.username, uname)):
+        room = UserRooms(trainee_username= current_user.username,trainer_username = uname)
+        db.session.add(room)
+        db.session.commit()
+        ROOMS = get_rooms_by_trainee_id(current_user.username)
+    else:
+        ROOMS = get_rooms_by_trainee_id(current_user.username)
+
+    curr_room = get_room(current_user.username, uname)
+
+    messages = get_chat_history(curr_room.id)
+
     print("\n\n\n",messages,"\n\n\n")
     return render_template('session.html',uname = uname, curr_uname = current_user.username, 
-                            rooms=ROOMS, messages = messages)
+                            rooms=ROOMS, messages = messages, curr_room = curr_room)
                     
 
 @socketio.on('message')
 def message(data):
 
-    message = ChatHistory(message=data['msg'],room=data['room'],
+    message = ChatHistory(message=data['msg'],room=data['room_id'],
                           date_sent=strftime('%b-%d %I:%M%p',localtime()))
     db.session.add(message)
     db.session.commit()
@@ -140,7 +148,7 @@ def message(data):
 def join(data):
 
     join_room(data['room'])
-    send({'msg':data['uname'] + " has joined the " + data['room'] + "room."},
+    send({'msg':data['uname'] + " has joined the " + data['room'] + " room."},
           room=data['room']
          )
     print(data['room'])
@@ -149,6 +157,6 @@ def join(data):
 def leave(data):
 
     leave_room(data['room'])
-    send({'msg': data['uname'] +" has left the " + data['room'] + "room."},
+    send({'msg': data['uname'] +" has left the " + data['room'] + " room."},
           room=data['room']
          )

@@ -44,12 +44,14 @@
                 
                 <div class="rooms" id="rooms">
                     {% for room in rooms %}
-                        <a id="select-room" class="room">{{room|title}}</a>
+                        <a id="select-room" href="{{room.trainer_username}}" class="room">{{room.trainer_username}}</a>
                     {% endfor %}
+                    <a id="curr_room" style="display: none;">{{curr_room.trainer_username}}</a>
                 </div>
 
                 <p style="display: none;" id="username">{{uname}}</p>
                 <p style="display: none;" id="curr_uname">{{curr_uname}}</p>
+                <p style="display: none;" id="curr_room_id">{{curr_room.id}}</p>
                 <script type = "text/javascript">
                     var uname = document.getElementById('username').innerText
                     console.log(uname)
@@ -63,10 +65,10 @@
                             
                             {% for msg in messages %}
                                 
-                                    <p>{{msg.message }}</p>
-                                    <p>{{msg.room}}</p>
-                                    <p>{{msg.date_sent}}</p>
-                                    <p>{{room}}</p>
+                                <p>{{msg.message }}</p>
+                                <p>{{msg.room}}</p>
+                                <p>{{msg.date_sent}}</p>
+                                <p>{{room}}</p>
 
                             {% endfor %}
                         </div>
@@ -84,7 +86,6 @@
                 <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
                 
             </div>
-            <p id="curr_room" style="display: none;"></p>
             <script src="/static/js/socketio.js"></script>
             <script src="/static/js/chat_page.js"></script>
         </main>

@@ -1,8 +1,10 @@
 from main import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import PickleType
 
 class User(UserMixin,db.Model):
+    __tablename__ = 'user'
     username = db.Column(db.String(80), unique=True, primary_key=True)
     fname = db.Column(db.String(120), nullable=False)
     lname = db.Column(db.String(120), nullable=False)
@@ -24,10 +26,17 @@ class User(UserMixin,db.Model):
            return (self.username)
 
 class ChatHistory(UserMixin,db.Model):
+    __tablename__ = 'chat_history'
     id = db.Column(db.Integer, primary_key = True)
     message = db.Column(db.String(500))
-    room = db.Column(db.String(500))
+    room = db.Column(db.String(500),db.ForeignKey('user_rooms.id'))
     date_sent =db.Column(db.String(50))
+
+class UserRooms(UserMixin,db.Model):
+    __tablename__ = 'user_rooms'
+    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    trainee_username = db.Column(db.String(80),db.ForeignKey('user.username'))
+    trainer_username = db.Column(db.String(80),db.ForeignKey('user.username'))
 
 def user_exits(uname):
     return bool(User.query.filter_by(username=uname).first())
@@ -35,6 +44,23 @@ def user_exits(uname):
 def get_trainers():
     print(User.query.filter_by(isTrainer = True).all())
     return User.query.filter_by(isTrainer = True).all()
+
+def room_exists(trainee_uname,trainer_uname):
+    print("\n\n\n\n\nROOM EXISTS\n\n\n\n",bool(UserRooms.query.filter_by(trainee_username=trainee_uname,
+                                                       trainer_username=trainer_uname).first()))
+    
+    return bool(UserRooms.query.filter_by(trainee_username=trainee_uname,
+                                          trainer_username=trainer_uname).first())
+
+def get_room(trainee_uname,trainer_uname):
+    return UserRooms.query.filter_by(trainee_username = trainee_uname, 
+                                     trainer_username = trainer_uname).first()
+
+def get_rooms_by_trainee_id(uname):
+    return UserRooms.query.filter_by(trainee_username = uname).all()
+
+def get_chat_history(room):
+    return ChatHistory.query.filter_by(id = room).all()
 
 if __name__ == "__main__":
     db.create_all()

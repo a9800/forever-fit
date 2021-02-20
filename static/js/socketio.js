@@ -1,8 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     var socket = io.connect('http://'+document.domain+':'+location.port);
 
-    let room = "Lounge";
-    joinRoom("Lounge");
+    let room = document.getElementById('curr_room').innerText;
+    joinRoom(room);
+    
+    var room_id = document.getElementById('curr_room_id').innerText;
+    console.log(room_id);
     
     socket.on('message', data => {
         
@@ -26,8 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.querySelector('#send_message').onclick = () => {
+        console.log(room_id )
         socket.send({'msg': document.querySelector('#user_message').value,
-                     'uname': curr_uname, 'room': room });
+                     'uname': curr_uname, 'room': room, 'room_id': room_id });
 
         document.getElementById('user_message').value="";
     }
