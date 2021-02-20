@@ -31,6 +31,7 @@ class ChatHistory(UserMixin,db.Model):
     message = db.Column(db.String(500))
     room = db.Column(db.String(500),db.ForeignKey('user_rooms.id'))
     date_sent =db.Column(db.String(50))
+    uname = db.Column(db.String(80),db.ForeignKey('user.username'))
 
 class UserRooms(UserMixin,db.Model):
     __tablename__ = 'user_rooms'

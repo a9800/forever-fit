@@ -65,10 +65,9 @@
                             
                             {% for msg in messages %}
                                 
-                                <p>{{msg.message }}</p>
-                                <p>{{msg.room}}</p>
+                                <p>{{msg.uname}}</p>
+                                <p>{{msg.message}}</p>
                                 <p>{{msg.date_sent}}</p>
-                                <p>{{room}}</p>
 
                             {% endfor %}
                         </div>

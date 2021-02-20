@@ -135,7 +135,7 @@ def sessions(uname):
 @socketio.on('message')
 def message(data):
 
-    message = ChatHistory(message=data['msg'],room=data['room_id'],
+    message = ChatHistory(message=data['msg'],room=data['room_id'], uname = current_user.username,
                           date_sent=strftime('%b-%d %I:%M%p',localtime()))
     db.session.add(message)
     db.session.commit()
