@@ -1,0 +1,148 @@
+:root {
+    --black: #0c0c0c;
+    --black2: #141414;
+    --white: #fffcf2;
+    --red: #e54b4b;
+    --lightred: #f0c1c1;
+    --blue: #4282f8;
+    --grey: #222222
+  }
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 10px; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--grey); 
+}
+
+@media (max-width : 711px){
+    .chat-holder{
+        height: 350px;
+    }
+    .rooms{
+        height: 350px;
+        width: 40%;
+        margin-right: 5px;
+        padding-top: 1px;
+        padding-left: 1px;
+        padding-right: 1px;
+        margin-left: 5px;
+    }
+    .room{
+        border-radius: 5px;
+    }
+}
+@media (min-width : 711px){
+    .chat-holder{
+        height: 578px;
+    }
+    .rooms{
+        height: 645px;
+        width: 20%;
+        padding: 5px 5px 5px 5px;
+    }
+    .room{
+        border-radius: 5px;
+    }
+}
+
+button{
+    width: 80px;
+    margin-top: 5px;
+    margin-bottom: 22px;
+}
+.rooms{
+    background-color: var(--grey);
+    overflow: auto; 
+    border-radius: 5px; 
+}
+
+.room{
+    background-color: var(--black);
+    color: var(--white);
+    height: 50px;
+    margin-bottom: 5px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.flex-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.room:hover{
+    background-color: var(--black2);
+    color: var(--white);
+    text-decoration:none;
+}
+
+.chat-holder{
+    overflow: auto;
+    margin-bottom: 10px;
+    padding-right: 8px;
+}
+
+.chat_container {
+  background-color: var(--grey);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.chat_container hr {
+    border: 1px solid var(--blue);
+    margin: 0 0 0 0 ;
+    margin-bottom: 10px;
+}
+.darker {
+  border-color: #ccc;
+  background-color: #ddd;
+}
+
+.chat_container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.chat_container img {
+  float: left;
+  max-width: 60px;
+  width: 100%;
+  margin-right: 20px;
+  border-radius: 50%;
+  margin-bottom: 5px;
+}
+
+.chat_container img.right {
+  float: right;
+  margin-left: 20px;
+  margin-right:0;
+}
+
+.time-right {
+  float: right;
+  color: #aaa;
+}
+
+.time-left {
+  float: left;
+  color: #999;
+}

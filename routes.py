@@ -5,7 +5,7 @@ from sql_db import *
 from main import app, login, socketio
 from flask_socketio import send, join_room, leave_room
 from time import localtime, strftime
-from sqlalchemy import inspect
+# pip3 install flask-socketio==4.3.2
 
 @app.route("/")
 def home():
@@ -141,20 +141,20 @@ def message(data):
 
     send({'msg': data['msg'], 'uname': data['uname'],
           'time_stamp':strftime('%b-%d %I:%M%p',localtime())},
-          room = data['room'])
+          room = data['room_id'])
 
 @socketio.on('join')
 def join(data):
-
+    print(data['room_name'])
     join_room(data['room'])
-    send({'msg':data['uname'] + " has joined the " + data['room'] + " room."},
+    send({'msg':data['uname'] + " has joined the " + data['room_name'] + " room."},
           room=data['room']
          )
 
 @socketio.on('leave')
 def leave(data):
 
-    leave_room(data['room'])
-    send({'msg': data['uname'] +" has left the " + data['room'] + " room."},
+    leave_room(data['room_name'])
+    send({'msg': data['uname'] +" has left the " + data['room_name'] + " room."},
           room=data['room']
          )

@@ -9,6 +9,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="../static/main.css" />
+        <link rel="stylesheet" href="../static/chatbox.css" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet" />      
@@ -37,6 +38,12 @@
         </header>
 
         <main style="padding-top:10px">
+            <div id="mySidebar" class="sidebar">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+                <a href="/">Home</a>
+                <a href="/">About Us</a>
+                <a href="/Login">Login</a>
+            </div>
             <div class="chat-btn">
                 <a onclick="openChats()" >>Chats</a>
             </div>
@@ -44,7 +51,9 @@
                 
                 <div class="rooms" id="rooms">
                     {% for room in rooms %}
-                        <a id="select-room" href="{{room.trainer_username}}" class="room">{{room.trainer_username}}</a>
+                        <a id="select-room" href="{{room.trainer_username}}" room_id="{{room.id}}" class="room">
+                            {{room.trainer_username}}
+                        </a>
                     {% endfor %}
                     <a id="curr_room" style="display: none;">{{curr_room.trainer_username}}</a>
                 </div>
@@ -60,18 +69,22 @@
                 </script>
                 
                 <div class="chat">
-                    <div class="chat-holder">
+                    <div id="chat_scroll" class="chat-holder">
                         <div id="chat_history">
                             
                             {% for msg in messages %}
                                 
-                                <p>{{msg.uname}}</p>
-                                <p>{{msg.message}}</p>
-                                <p>{{msg.date_sent}}</p>
-                                <p>{{msg.room}}</p>
+                                <div class="chat_container">
+                                    <div>
+                                        <p>{{msg.uname}}</p>
+                                        <hr>
+                                        <p>{{msg.message}}</p>
+                                        <span class="time-right">{{msg.date_sent}}</span>
+                                    </div>
+                                </div>
 
                             {% endfor %}
-                            
+
                         </div>
                         <div id="display_message_section">
 
@@ -79,8 +92,10 @@
                     </div>
 
                     <div class="input-area">
-                        <input type="text" id="user_message" placeholder="Type Here" autocomplete="off">
-                        <button type="button" id="send_message">SEND</button>
+                        <div class="flex-row">
+                            <input type="text" id="user_message" placeholder="Type Here" autocomplete="off">
+                            <button type="button" id="send_message">SEND</button>
+                        </div>
                     </div>
                 </div>
 
