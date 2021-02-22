@@ -596,6 +596,14 @@ button:hover {
   .chat-btn{
     display: initial;
   }
+  .flex-row{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+  .home-trainer{
+    margin-bottom: 7px;
+  }
 }
 @media (min-width : 711px){
   .tgoals{

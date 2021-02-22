@@ -99,7 +99,7 @@ def Login():
 @app.route('/Home')
 #@login_required
 def Home():
-    recent_rooms = get_rooms_by_trainee_id(current_user.username,2)
+    recent_rooms = get_limit_rooms_by_trainee_id(current_user.username,2)
     return render_template('home.html',recent_rooms=recent_rooms)
 
 @app.route('/TrainerSearch')

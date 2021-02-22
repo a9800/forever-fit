@@ -1,7 +1,7 @@
 from main import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import select
+from sqlalchemy import desc
 
 class User(UserMixin,db.Model):
     __tablename__ = 'user'
@@ -67,8 +67,8 @@ def get_room(trainee_uname,trainer_uname):
 def get_rooms_by_trainee_id(uname):
     return UserRooms.query.filter_by(trainee_username = uname).all()
 
-def get_rooms_by_trainee_id(uname,limit):
-    return UserRooms.query.filter_by(trainee_username = uname).limit(limit).all()
+def get_limit_rooms_by_trainee_id(uname,limit):
+    return UserRooms.query.filter_by(trainee_username = uname).order_by(desc(UserRooms.id)).limit(limit).all()
 
 def get_chats():
     return ChatHistory.query.all()
