@@ -52,7 +52,7 @@
                 <div class="rooms" id="rooms">
                     {% for room in rooms %}
                         <a id="select-room" href="{{room.trainer_username}}" room_id="{{room.id}}" class="room">
-                            {{room.trainer_username}}
+                            {{room.trainer_fname}} {{room.trainer_lname}}
                         </a>
                     {% endfor %}
                     <a id="curr_room" style="display: none;">{{curr_room.trainer_username}}</a>
@@ -60,12 +60,17 @@
 
                 <p style="display: none;" id="username">{{uname}}</p>
                 <p style="display: none;" id="curr_uname">{{curr_uname}}</p>
+                <p style="display: none;" id="curr_fname">{{curr_fname}}</p>
+                <p style="display: none;" id="curr_lname">{{curr_lname}}</p>
                 <p style="display: none;" id="curr_room_id">{{curr_room.id}}</p>
                 <script type = "text/javascript">
                     var uname = document.getElementById('username').innerText
-                    console.log(uname)
+                    
                     const curr_uname = document.getElementById('curr_uname').innerText
-                    console.log(curr_uname)
+              
+                    const curr_fname = document.getElementById('curr_fname').innerText
+               
+                    const curr_lname = document.getElementById('curr_lname').innerText
                 </script>
                 
                 <div class="chat">
@@ -75,12 +80,12 @@
                             {% for msg in messages %}
                                 
                                 <div class="chat_container">
-                                    <div>
-                                        <p>{{msg.uname}}</p>
-                                        <hr>
-                                        <p>{{msg.message}}</p>
-                                        <span class="time-right">{{msg.date_sent}}</span>
-                                    </div>
+                                    
+                                    <p>{{msg.fname}} {{msg.lname}}</p>
+                                    <hr>
+                                    <p>{{msg.message}}</p>
+                                    <span class="time-right">{{msg.date_sent}}</span>
+                                    
                                 </div>
 
                             {% endfor %}

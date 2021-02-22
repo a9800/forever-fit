@@ -12,18 +12,22 @@ document.addEventListener('DOMContentLoaded', () => {
     
     socket.on('message', data => {
         
-        const p = document.createElement('p');
-        const span_username = document.createElement('span');
-        const span_timestamp = document.createElement('span');
-        const br = document.createElement('br');
+        const div = document.createElement('div');
+        div.className = "chat_container"
+        const p_username = document.createElement('p');
+        const p_timestamp = document.createElement('span');
+        p_timestamp.className = "time-right"
+        const hr = document.createElement('hr');
+        const p_message = document.createElement('p');
 
         if (data.uname) {
-            span_username.innerHTML = data.uname;
-            span_timestamp.innerHTML = data.time_stamp;
+            p_message.innerHTML = data.msg
+            p_username.innerHTML = data.fname + " " + data.lname;
+            p_timestamp.innerHTML = data.time_stamp;
 
-            p.innerHTML = span_username.outerHTML + br.outerHTML + data.msg + br.outerHTML
-                          + span_timestamp.outerHTML;
-            document.querySelector('#display_message_section').append(p);
+            div.innerHTML = p_username.outerHTML + hr.outerHTML + p_message.outerHTML
+                          + p_timestamp.outerHTML;
+            document.querySelector('#display_message_section').append(div);
             
         } else {
             printSysMsg(data.msg);
@@ -36,7 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if(!(document.getElementById('user_message').value==="")){
             console.log(room_id )
             socket.send({'msg': document.querySelector('#user_message').value,
-                     'uname': curr_uname, 'room': room, 'room_id': room_id });
+                     'uname': curr_uname,'fname':curr_fname,'lname':curr_lname,
+                     'room': room, 'room_id': room_id });
 
             document.getElementById('user_message').value="";
         }

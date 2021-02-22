@@ -116,7 +116,12 @@ def logout():
 @login_required
 def sessions(uname):
     if(not room_exists(current_user.username, uname)):
-        room = UserRooms(trainee_username= current_user.username,trainer_username = uname)
+        room = UserRooms(trainee_username= current_user.username,
+                         trainee_fname = current_user.fname,
+                         trainee_lname = current_user.lname,
+                         trainer_username = uname,
+                         trainer_fname = get_user(uname).fname,
+                         trainer_lname = get_user(uname).lname)
         db.session.add(room)
         db.session.commit()
         ROOMS = get_rooms_by_trainee_id(current_user.username)
@@ -127,20 +132,24 @@ def sessions(uname):
 
     messages = get_chat_history(curr_room.id)
 
-    return render_template('session.html',uname = uname, curr_uname = current_user.username, 
+    return render_template('session.html',uname = uname, curr_uname = current_user.username,
+                            curr_fname = current_user.fname, curr_lname = current_user.lname, 
                             rooms=ROOMS, messages = messages, curr_room = curr_room)
                     
 
 @socketio.on('message')
 def message(data):
     print(data['room_id'])
-    message = ChatHistory(message=data['msg'],room=data['room_id'], uname = current_user.username,
+    message = ChatHistory(message=data['msg'],
+                          room=data['room_id'], 
+                          fname = get_user(current_user.username).fname,
+                          lname = get_user(current_user.username).lname,
                           date_sent=strftime('%b-%d %I:%M%p',localtime()))
     db.session.add(message)
     db.session.commit()
 
-    send({'msg': data['msg'], 'uname': data['uname'],
-          'time_stamp':strftime('%b-%d %I:%M%p',localtime())},
+    send({'msg': data['msg'], 'uname': data['uname'], 'fname': data['fname'], 'lname': data['lname']
+          ,'time_stamp':strftime('%b-%d %I:%M%p',localtime())},
           room = data['room_id'])
 
 @socketio.on('join')

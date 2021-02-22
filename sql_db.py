@@ -1,6 +1,7 @@
 from main import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import select
 
 class User(UserMixin,db.Model):
     __tablename__ = 'user'
@@ -29,17 +30,25 @@ class ChatHistory(UserMixin,db.Model):
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     message = db.Column(db.String(500))
     room = db.Column(db.String(500))
-    date_sent =db.Column(db.String(50))
-    uname = db.Column(db.String(80),db.ForeignKey('user.username'))
+    date_sent = db.Column(db.String(50))
+    fname = db.Column(db.String(80),db.ForeignKey('user.fname'))
+    lname = db.Column(db.String(80),db.ForeignKey('user.lname'))
 
 class UserRooms(UserMixin,db.Model):
     __tablename__ = 'user_rooms'
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     trainee_username = db.Column(db.String(80),db.ForeignKey('user.username'))
+    trainee_fname = db.Column(db.String(80))
+    trainee_lname = db.Column(db.String(80))
     trainer_username = db.Column(db.String(80),db.ForeignKey('user.username'))
+    trainer_fname = db.Column(db.String(80))
+    trainer_lname = db.Column(db.String(80))
 
 def user_exits(uname):
     return bool(User.query.filter_by(username=uname).first())
+
+def get_user(uname):
+    return User.query.filter_by(username=uname).first()
 
 def get_trainers():
     print(User.query.filter_by(isTrainer = True).all())
@@ -50,7 +59,8 @@ def room_exists(trainee_uname,trainer_uname):
                                           trainer_username=trainer_uname).first())
 
 def get_room(trainee_uname,trainer_uname):
-    return UserRooms.query.filter_by(trainee_username = trainee_uname, 
+    if room_exists(trainee_uname,trainer_uname):
+        return UserRooms.query.filter_by(trainee_username = trainee_uname, 
                                      trainer_username = trainer_uname).first()
 
 def get_rooms_by_trainee_id(uname):
