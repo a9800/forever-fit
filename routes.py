@@ -99,7 +99,8 @@ def Login():
 @app.route('/Home')
 #@login_required
 def Home():
-    return render_template('home.html')
+    recent_rooms = get_rooms_by_trainee_id(current_user.username,2)
+    return render_template('home.html',recent_rooms=recent_rooms)
 
 @app.route('/TrainerSearch')
 #@login_required
@@ -142,8 +143,9 @@ def message(data):
     print(data['room_id'])
     message = ChatHistory(message=data['msg'],
                           room=data['room_id'], 
-                          fname = get_user(current_user.username).fname,
-                          lname = get_user(current_user.username).lname,
+                          uname = current_user.username,
+                          fname = current_user.fname,
+                          lname = current_user.lname,
                           date_sent=strftime('%b-%d %I:%M%p',localtime()))
     db.session.add(message)
     db.session.commit()

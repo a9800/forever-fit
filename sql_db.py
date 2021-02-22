@@ -31,6 +31,7 @@ class ChatHistory(UserMixin,db.Model):
     message = db.Column(db.String(500))
     room = db.Column(db.String(500))
     date_sent = db.Column(db.String(50))
+    uname = db.Column(db.String(80),db.ForeignKey('user.username'))
     fname = db.Column(db.String(80),db.ForeignKey('user.fname'))
     lname = db.Column(db.String(80),db.ForeignKey('user.lname'))
 
@@ -65,6 +66,9 @@ def get_room(trainee_uname,trainer_uname):
 
 def get_rooms_by_trainee_id(uname):
     return UserRooms.query.filter_by(trainee_username = uname).all()
+
+def get_rooms_by_trainee_id(uname,limit):
+    return UserRooms.query.filter_by(trainee_username = uname).limit(limit).all()
 
 def get_chats():
     return ChatHistory.query.all()
