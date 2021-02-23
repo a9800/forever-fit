@@ -30,7 +30,7 @@ def SignUpTrainee():
 
     if request.method == 'POST':
         form = request.form
-        print(form)
+        #print(form)
         if (user_exits(form['username'])):
             flash("Username '"+form['username']+"' is taken")
             return redirect('SignUpTrainee')
@@ -60,7 +60,7 @@ def SignUpTrainer():
 
     if request.method == 'POST':
         form = request.form
-        print(form)
+        #print(form)
         if (user_exits(form['username'])):
             flash("Username '"+form['username']+"' is taken")
             return redirect('SignUpTrainer')
@@ -71,7 +71,7 @@ def SignUpTrainer():
             # Removing empty elemets and sorting it alphabetically
             goals = sorted([i for i in goals if i])
 
-            print(goals)
+            #print(goals)
             register = User(username = form['username'], fname = form['fname'],
                             lname = form['lname'], dob = form['birthday'], isTrainer = True,
                             fitnessGoals = form['goals'])
@@ -99,8 +99,12 @@ def Login():
 @app.route('/Home')
 #@login_required
 def Home():
-    recent_rooms = get_limit_rooms_by_trainee_id(current_user.username,2)
-    return render_template('home.html',recent_rooms=recent_rooms)
+    if(current_user.isTrainer != True):
+        recent_rooms = get_limit_rooms_by_trainee_id(current_user.username,2)
+        return render_template('home.html',recent_rooms=recent_rooms)
+    else:
+        recent_rooms = get_limit_rooms_by_trainer_id(current_user.username,2)
+        return render_template('trainer-home.html',recent_rooms=recent_rooms)
 
 @app.route('/TrainerSearch')
 #@login_required
@@ -113,34 +117,64 @@ def logout():
     logout_user()
     return redirect('/')
 
+@app.route('/chats')
+@login_required
+def chats():
+    if(not current_user.isTrainer):
+        ROOMS = get_rooms_by_trainee_id(current_user.username)
+
+        return render_template('chats.html', curr_uname = current_user.username, is_trainer = current_user.isTrainer,
+                                curr_fname = current_user.fname, curr_lname = current_user.lname, 
+                                rooms=ROOMS)
+    else:
+        
+        ROOMS = get_rooms_by_trainer_id(current_user.username)
+
+        return render_template('chats.html', curr_uname = current_user.username, is_trainer = current_user.isTrainer,
+                                curr_fname = current_user.fname, curr_lname = current_user.lname, 
+                                rooms=ROOMS)
+
+
+
 @app.route('/chat/<uname>')
 @login_required
 def sessions(uname):
-    if(not room_exists(current_user.username, uname)):
-        room = UserRooms(trainee_username= current_user.username,
-                         trainee_fname = current_user.fname,
-                         trainee_lname = current_user.lname,
-                         trainer_username = uname,
-                         trainer_fname = get_user(uname).fname,
-                         trainer_lname = get_user(uname).lname)
-        db.session.add(room)
-        db.session.commit()
-        ROOMS = get_rooms_by_trainee_id(current_user.username)
+    if(not current_user.isTrainer):
+        if(not room_exists(current_user.username, uname)):
+            room = UserRooms(trainee_username= current_user.username,
+                             trainee_fname = current_user.fname,
+                             trainee_lname = current_user.lname,
+                             trainer_username = uname,
+                             trainer_fname = get_user(uname).fname,
+                             trainer_lname = get_user(uname).lname)
+            db.session.add(room)
+            db.session.commit()
+            ROOMS = get_rooms_by_trainee_id(current_user.username)
+        else:
+            ROOMS = get_rooms_by_trainee_id(current_user.username)
+
+        curr_room = get_room(current_user.username, uname)
+
+        messages = get_chat_history(curr_room.id)
+
+        return render_template('session.html',uname = uname, curr_uname = current_user.username,
+                                curr_fname = current_user.fname, curr_lname = current_user.lname, 
+                                rooms=ROOMS, messages = messages, curr_room = curr_room)
     else:
-        ROOMS = get_rooms_by_trainee_id(current_user.username)
+        if(room_exists(uname, current_user.username)):
+            ROOMS = get_rooms_by_trainer_id(current_user.username)
 
-    curr_room = get_room(current_user.username, uname)
+        curr_room = get_room(uname, current_user.username)
 
-    messages = get_chat_history(curr_room.id)
+        messages = get_chat_history(curr_room.id)
 
-    return render_template('session.html',uname = uname, curr_uname = current_user.username,
-                            curr_fname = current_user.fname, curr_lname = current_user.lname, 
-                            rooms=ROOMS, messages = messages, curr_room = curr_room)
-                    
+        return render_template('trainer-session.html',uname = uname, curr_uname = current_user.username,
+                                curr_fname = current_user.fname, curr_lname = current_user.lname, 
+                                rooms=ROOMS, messages = messages, curr_room = curr_room)
 
 @socketio.on('message')
 def message(data):
-    print(data['room_id'])
+    #print(data['room_id'])
     message = ChatHistory(message=data['msg'],
                           room=data['room_id'], 
                           uname = current_user.username,
@@ -156,7 +190,7 @@ def message(data):
 
 @socketio.on('join')
 def join(data):
-    print(data['room_name'])
+    #print(data['room_name'])
     join_room(data['room'])
     send({'msg':data['uname'] + " has joined the " + data['room_name'] + " room."},
           room=data['room']
@@ -169,3 +203,11 @@ def leave(data):
     send({'msg': data['uname'] +" has left the " + data['room_name'] + " room."},
           room=data['room']
          )
+
+@app.route('/Friends')
+@login_required
+def friends():
+    if(not current_user.isTrainer):
+        return render_template('friends.html')
+    else:
+        return redirect('Home')

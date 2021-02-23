@@ -67,8 +67,14 @@ def get_room(trainee_uname,trainer_uname):
 def get_rooms_by_trainee_id(uname):
     return UserRooms.query.filter_by(trainee_username = uname).all()
 
+def get_rooms_by_trainer_id(uname):
+    return UserRooms.query.filter_by(trainer_username = uname).all()
+
 def get_limit_rooms_by_trainee_id(uname,limit):
     return UserRooms.query.filter_by(trainee_username = uname).order_by(desc(UserRooms.id)).limit(limit).all()
+
+def get_limit_rooms_by_trainer_id(uname,limit):
+    return UserRooms.query.filter_by(trainer_username = uname).order_by(desc(UserRooms.id)).limit(limit).all()
 
 def get_chats():
     return ChatHistory.query.all()

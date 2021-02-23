@@ -4,6 +4,7 @@
   --red: #e54b4b;
   --lightred: #f0c1c1;
   --blue: #4282f8;
+  --darkblue: #356cd1;
   --grey: #222222;
   --lightgrey: #3d3d3d;
 }
@@ -594,7 +595,17 @@ button:hover {
     flex-direction: column;
   }
   .chat-btn{
+    background-color: var(--lightgrey);
+    border-radius: 5px;
+    color: var(--white);
     display: initial;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-left: 20px;
+    margin-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-shadow: 2px 2px 2px 2px var(--black);
   }
   .flex-row{
     display: flex;
@@ -603,6 +614,16 @@ button:hover {
   }
   .home-trainer{
     margin-bottom: 7px;
+  }
+  .friend-body{
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .add-friend{
+    height: 50px;
+    padding: 13px 5px 5px 8px;
+    width: 100px;
   }
 }
 @media (min-width : 711px){
@@ -639,9 +660,18 @@ button:hover {
     flex-direction: row;
     justify-content: space-evenly;
   }
-  
-}
+  .friend-body{
+    padding-top: 50px;
+    padding-left: 30%;
+    padding-right: 30%;
+  }
 
+  .add-friend{
+    height: 50px;
+    padding: 10px 10px 10px 10px;
+    width: 135px;
+  }
+}
 .home-trainer{
     background-color: var(--lightgrey);
     border-radius: 5px;
@@ -652,4 +682,48 @@ button:hover {
 .btn-right{
   position: relative;
   float: right;
+}
+
+.add-friend{
+  background-color: var(--blue);
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.add-friend:hover{
+  cursor: pointer;
+  background-color: var(--darkblue);
+}
+
+table {
+  font-family: 'Roboto', sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+
+  text-align: center;
+  padding: 10px;
+}
+
+tr:nth-child(even) {
+  background-color: var(--lightgrey);
+}
+
+table{
+  background-color: var(--grey);
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.top-table{
+  border-top-left-radius: 10px; 
+  border-top-right-radius: 10px;
+}
+
+.bottom-table{
+  border-bottom-left-radius: 10px; 
+  border-bottom-right-radius: 10px;
 }

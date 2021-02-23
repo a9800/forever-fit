@@ -46,23 +46,25 @@
                 <a href="/Friends">Friends</a>
                 <a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
             </div>
+            
             <p onclick="openChats()" class="big chat-btn">Chats</p>
+            
             <div class="chatbox">
                 
                 <div class="rooms" id="rooms">
                     {% for room in rooms %}
-                        <a id="select-room" href="{{room.trainer_username}}" room_id="{{room.id}}" class="room">
-                            {{room.trainer_fname}} {{room.trainer_lname}}
-                        </a>
+                        {% if (is_trainer) %}
+                            <a id="select-room" href="chat/{{room.trainee_username}}" room_id="{{room.id}}" class="room">
+                                {{room.trainee_fname}} {{room.trainee_lname}}
+                            </a>
+                        {% else %}
+                            <a id="select-room" href="chat/{{room.trainer_username}}" room_id="{{room.id}}" class="room">
+                                {{room.trainer_fname}} {{room.trainer_lname}}
+                            </a>
+                        {% endif %}
                     {% endfor %}
-                    <a id="curr_room" style="display: none;">{{curr_room.trainer_username}}</a>
                 </div>
 
-                <p style="display: none;" id="username">{{uname}}</p>
-                <p style="display: none;" id="curr_uname">{{curr_uname}}</p>
-                <p style="display: none;" id="curr_fname">{{curr_fname}}</p>
-                <p style="display: none;" id="curr_lname">{{curr_lname}}</p>
-                <p style="display: none;" id="curr_room_id">{{curr_room.id}}</p>
                 <script type = "text/javascript">
                     var uname = document.getElementById('username').innerText
                     
@@ -74,30 +76,9 @@
                 </script>
                 
                 <div class="chat">
-                    <div id="chat_scroll" class="chat-holder">
-                        <div id="chat_history">
-                            
-                            {% for msg in messages %}
-                                
-                                <div class="chat_container">
-                                    
-                                    <p>{{msg.fname}} {{msg.lname}}</p>
-
-                                    <hr>
-                                   
-                                    <p>{{msg.message}}</p>
-                                    <span class="time-right">{{msg.date_sent}}</span>
-                                    
-                                </div>
-
-                            {% endfor %}
-
-                        </div>
-                        <div id="display_message_section">
-
-                        </div>
+                    <div class="chat-rooms" style="display:flex; justify-content: center; height:550px">
+                        <p class="big">Select a chat room</p>
                     </div>
-
                     <div class="input-area">
                         <div class="flex-row">
                             <input type="text" id="user_message" placeholder="Type Here" autocomplete="off">
