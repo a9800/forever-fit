@@ -24,10 +24,11 @@
                     </div>
                     <ul class="nav navbar-nav laptop">
                         <li><a href="/">Home</a></li>
-                        <li><a href="/TrainerSearch">Trainer Search</a></li>
-                        <li><a href="/Friends">Friends</a></li>
+                        {% if (not current_user.isTrainer) %}
+                            <li><a href="/TrainerSearch">Trainer Search</a></li>
+                            <li><a href="/Friends">Friends</a></li>                
+                        {% endif %}
                         <li><a href="/chats">Chats</a></li>
-                        <li><a href="/TrainingSessions">Sessions</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right laptop">
                         <li>
@@ -46,38 +47,41 @@
                 <a href="#">Trainer Search</a>
                 <a href="/Friends">Friends</a>
                 <a href="/chats">Chats</a>
-                <a href="/TrainingSessions">Sessions</a>
             </div>
-            <div class=" widget-holder">
-                <div class="widget">
+            <div class=" friend-body">
+                <div class="widget" style="height: 220px; width:100%; margin-bottom: 30px;">
                     <div class="big">Upcoming Sessions</div>
                     <hr>
-                    <div class="small">You have no upcoming sessions, book one with one of our trainers</div>
+                    <div class="small">You have no upcoming sessions, book one with one of the trainers below</div>
                     <br>
-                    <a href="/TrainerSearch" class="btn btn-primary active btn-right" role="button">Trainer Search</a>
                 </div>
-                <div class="widget">
-                    <div class="big">Recent Chats</div>
+
+                <div class="widget" style="width: 100%;">
+                    <div class="big">Your Trainers</div>
                     <hr>
-                    {% if recent_rooms %}
-                        <div class="flex-row">
-                            {% for rooms in recent_rooms %}
-                                <div class="home-trainer">
-                                    <p class="small">{{rooms.trainer_fname}} {{rooms.trainer_lname}}</p>
-                                    <a href="/chat/{{rooms.trainer_username}}" class="btn btn-primary active btn-right" role="button">
+            
+                    <ul class="hs" style="padding-left: 0px;">
+                        {% if current_user.isTrainer %}
+                            {% for room in rooms %}
+                                <li class="items">{{room.trainee_fname}} {{room.trainee_lname}}</li>
+                            {% endfor %}
+                        {% else %}
+                            {% for room in rooms %}
+                                <li class="items home-trainer flex-column">
+                                    <p class="small">{{room.trainer_fname}} {{room.trainer_lname}}</p>
+                                    <a href="/chat/{{room.trainer_username}}" class="btn btn-primary active btn-right" role="button">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
                                             <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
                                         </svg>
                                         Message
-                                    </a>
-                                </div>
+                                    </a>  
+                                    <a href="/chat/{{room.trainer_username}}" class="btn btn-primary active btn-right" role="button">
+                                        Book Session
+                                    </a>    
+                                </li>
                             {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="small">No recent chats, pair up with a trainer and start a chat with them</div>
-                        <br>
-                        <a href="/TrainerSearch" class="btn btn-primary active btn-right" role="button">Trainer Search</a>
-                    {%endif%}
+                        {% endif %}
+                    </ul>
                 </div>
             </div>
         </main>

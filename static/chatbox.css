@@ -15,19 +15,19 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: grey; 
-  border-radius: 10px;
+background: grey; 
+border-radius: 10px;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #555;
-  border-radius: 10px; 
+background: rgb(99, 98, 98);
+border-radius: 10px; 
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--grey); 
+background: rgb(78, 78, 78); 
 }
 
 @media (max-width : 711px){
@@ -49,10 +49,10 @@
 }
 @media (min-width : 711px){
     .chat-holder{
-        height: 578px;
+        height: 700px;
     }
     .rooms{
-        height: 645px;
+        height: 764px;
         width: 20%;
         padding: 5px 5px 5px 5px;
     }

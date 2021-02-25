@@ -97,7 +97,7 @@ def Login():
     return render_template('login.html')
 
 @app.route('/Home')
-#@login_required
+@login_required
 def Home():
     if(current_user.isTrainer != True):
         recent_rooms = get_limit_rooms_by_trainee_id(current_user.username,2)
@@ -107,12 +107,12 @@ def Home():
         return render_template('trainer-home.html',recent_rooms=recent_rooms)
 
 @app.route('/TrainerSearch')
-#@login_required
+@login_required
 def TrainerSearch():
     return render_template('trainer-search.html', trainers = get_trainers())
 
 @app.route('/logout')
-#@login_required
+@login_required
 def logout():
     logout_user()
     return redirect('/')
@@ -187,6 +187,12 @@ def message(data):
     send({'msg': data['msg'], 'uname': data['uname'], 'fname': data['fname'], 'lname': data['lname']
           ,'time_stamp':strftime('%b-%d %I:%M%p',localtime())},
           room = data['room_id'])
+
+@app.route('/TrainingSessions')
+@login_required
+def training_sessions():
+    ROOMS = get_rooms_by_trainee_id(current_user.username)
+    return render_template('/training-sessions.html', current_user = current_user, rooms = ROOMS)
 
 @socketio.on('join')
 def join(data):

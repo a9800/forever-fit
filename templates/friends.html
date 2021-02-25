@@ -25,6 +25,8 @@
                     <ul class="nav navbar-nav laptop">
                         <li><a href="/">Home</a></li>
                         <li><a href="/TrainerSearch">Trainer Search</a></li>
+                        <li><a href="/chats">Chats</a></li>
+                        <li><a href="/TrainingSessions">Sessions</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right laptop">
                         <li>
@@ -40,10 +42,17 @@
             <div id="mySidebar" class="sidebar">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
                 <a href="/SignUp">Home</a>
-                <a href="#">Trainer Search</a>
+                <a href="TrainerSearch">Trainer Search</a>
+                <a href="/chats">Chats</a>
+                <a href="/TrainingSessions">Sessions</a>
             </div>
             <div class="friend-body">
-                <p class="add-friend small">+ Add Friend</p>
+                <p onclick="hide()" class="add-friend small">+ Add Friend</p>
+                <div class="big">Track your friends progress</div>
+                <hr>
+                <div id="myFriend" class="addFriend">
+
+                </div>
                 <table>
                     <tr class="top-table">
                         <th>Rank</th>
@@ -59,11 +68,6 @@
                         <td>2</td>
                         <td>Humaid AlQassimi</td>
                         <td>4</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Euan Gordon</td>
-                        <td>10</td>
                     </tr>
                     <tr>
                         <td>3</td>
@@ -87,6 +91,15 @@
             function closeNav() {
                 document.getElementById("mySidebar").style.width = "0";
                 document.getElementById("main").style.marginLeft = "0";
+            }
+
+            function hide(){
+                var x = document.getElementById("addFriend");
+                if (x.style.display === "none") {
+                  x.style.display = "block";
+                } else {
+                  x.style.display = "none";
+                }
             }
         </script>
     </body>

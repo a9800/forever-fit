@@ -45,6 +45,27 @@ class UserRooms(UserMixin,db.Model):
     trainer_fname = db.Column(db.String(80))
     trainer_lname = db.Column(db.String(80))
 
+class ProposedSessions:
+    __tablename__ = 'proposed_sessions'
+    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    trainee_username = db.Column(db.String(80),db.ForeignKey('user.username'))
+    trainer_username = db.Column(db.String(80),db.ForeignKey('user.username'))
+    date = db.Column(db.String(120), nullable=False)
+
+class UpcomingSessions:
+    __tablename__ = 'upcoming_sessions'
+    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    trainee_username = db.Column(db.String(80),db.ForeignKey('user.username'))
+    trainer_username = db.Column(db.String(80),db.ForeignKey('user.username'))
+    date = db.Column(db.String(120), nullable=False)
+
+class CompletedSessions:
+    __tablename__ = 'completed_sessions'
+    id = db.Column(db.Integer, primary_key = True)
+    trainee_username = db.Column(db.String(80),db.ForeignKey('user.username'))
+    trainer_username = db.Column(db.String(80),db.ForeignKey('user.username'))
+    date = db.Column(db.String(120), nullable=False)
+
 def user_exits(uname):
     return bool(User.query.filter_by(username=uname).first())
 

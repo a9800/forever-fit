@@ -108,8 +108,8 @@
     margin-bottom: 10px;
   }
   .navbar{
-      padding-left: 15%;
-      padding-right: 15%;
+      padding-left: 13%;
+      padding-right: 13%;
  }
   .navbar-nav{
       padding-top: 10px;
@@ -591,7 +591,6 @@ button:hover {
   .rooms{
     display: none;
     background-color: var(--grey);
-    display: flex;
     flex-direction: column;
   }
   .chat-btn{
@@ -726,4 +725,55 @@ table{
 .bottom-table{
   border-bottom-left-radius: 10px; 
   border-bottom-right-radius: 10px;
+}
+
+:root {
+  --gutter: 20px;
+}
+
+.hs {
+  display: grid;
+  grid-gap: calc(var(--gutter) / 2);
+  grid-template-columns: repeat(6, calc(50% - var(--gutter) * 2));
+  grid-template-rows: minmax(150px, 1fr);
+  
+  overflow-x: scroll;
+  scroll-snap-type: x proximity;
+  padding-bottom: calc(.75 * var(--gutter));
+  margin-bottom: calc(-.25 * var(--gutter));
+
+  list-style-type: none;
+}
+
+.items{
+  background-color: var(--lightgrey);
+  border-radius: 5px;
+  padding: 10px 10px 10px 10px;
+  box-shadow: 2px 2px 2px 2px var(--black);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+background: grey; 
+border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: rgb(99, 98, 98);
+border-radius: 10px; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+background: rgb(78, 78, 78); 
+}
+
+.chat-btn:hover{
+  cursor: pointer;
 }
