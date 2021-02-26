@@ -191,7 +191,10 @@ def message(data):
 @app.route('/TrainingSessions')
 @login_required
 def training_sessions():
-    ROOMS = get_rooms_by_trainee_id(current_user.username)
+    if current_user.isTrainer:
+        ROOMS = get_rooms_by_trainer_id(current_user.username)
+    else:
+        ROOMS = get_rooms_by_trainee_id(current_user.username)
     return render_template('/training-sessions.html', current_user = current_user, rooms = ROOMS)
 
 @socketio.on('join')
@@ -210,10 +213,17 @@ def leave(data):
           room=data['room']
          )
 
-@app.route('/Friends')
+@app.route('/Friends',methods = ['POST','GET'])
 @login_required
 def friends():
-    if(not current_user.isTrainer):
-        return render_template('friends.html')
-    else:
+    if request.method == 'GET':
+        if(not current_user.isTrainer):
+            return render_template('friends.html')
+        else:
+            return redirect('Home')
+    
+    if request.method == 'POST':
+        print("HELLLOOO")
+        form = request.form
+        print(form['uname'])
         return redirect('Home')

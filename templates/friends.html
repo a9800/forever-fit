@@ -47,12 +47,23 @@
                 <a href="/TrainingSessions">Sessions</a>
             </div>
             <div class="friend-body">
-                <p onclick="hide()" class="add-friend small">+ Add Friend</p>
+                <p onclick="hide()" class="add-friend small">
+                    + Add Friend
+                </p>
+
+                <div id="addFriend" class="addFriend">
+                    <hr>
+                    <form method="post">
+                        <label for="uname" class="big">Add friend by username</label>
+                        <input type="text" placeholder="Enter firstname" name="uname" required />
+
+                        <button type="submit" class="request">SEND</button>
+                    </form>
+                </div>
+
                 <div class="big">Track your friends progress</div>
                 <hr>
-                <div id="myFriend" class="addFriend">
 
-                </div>
                 <table>
                     <tr class="top-table">
                         <th>Rank</th>
@@ -96,7 +107,7 @@
             function hide(){
                 var x = document.getElementById("addFriend");
                 if (x.style.display === "none") {
-                  x.style.display = "block";
+                  x.style.display = "initial";
                 } else {
                   x.style.display = "none";
                 }

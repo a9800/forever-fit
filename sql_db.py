@@ -76,9 +76,12 @@ def get_trainers():
     print(User.query.filter_by(isTrainer = True).all())
     return User.query.filter_by(isTrainer = True).all()
 
-def room_exists(trainee_uname,trainer_uname):  
-    return bool(UserRooms.query.filter_by(trainee_username=trainee_uname,
-                                          trainer_username=trainer_uname).first())
+def room_exists(trainee_uname,trainer_uname):
+    return (room_exists_helper(trainee_uname,trainer_uname) or room_exists_helper(trainer_uname,trainee_uname))
+
+def room_exists_helper(uname1,uname2):
+    return bool(UserRooms.query.filter_by(trainee_username=uname1,
+                                          trainer_username=uname2).first())
 
 def get_room(trainee_uname,trainer_uname):
     if room_exists(trainee_uname,trainer_uname):

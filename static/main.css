@@ -777,3 +777,12 @@ background: rgb(78, 78, 78);
 .chat-btn:hover{
   cursor: pointer;
 }
+
+.addFriend {
+  display: none;
+}
+
+.request{
+  width: 100px;
+  align-self: end;
+}
