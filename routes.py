@@ -157,9 +157,12 @@ def sessions(uname):
 
         messages = get_chat_history(curr_room.id)
 
+        partnership = partnership_exists(current_user.username,uname)
+
         return render_template('session.html',uname = uname, curr_uname = current_user.username,
                                 curr_fname = current_user.fname, curr_lname = current_user.lname, 
-                                rooms=ROOMS, messages = messages, curr_room = curr_room)
+                                rooms=ROOMS, messages = messages, curr_room = curr_room,
+                                partnership=partnership)
     else:
         if(room_exists(uname, current_user.username)):
             ROOMS = get_rooms_by_trainer_id(current_user.username)
@@ -188,30 +191,32 @@ def message(data):
           ,'time_stamp':strftime('%b-%d %I:%M%p',localtime())},
           room = data['room_id'])
 
+
 @app.route('/TrainingSessions')
 @login_required
 def training_sessions():
     if current_user.isTrainer:
         ROOMS = get_rooms_by_trainer_id(current_user.username)
     else:
-        ROOMS = get_rooms_by_trainee_id(current_user.username)
-    return render_template('/training-sessions.html', current_user = current_user, rooms = ROOMS)
+        trainers = get_trainers_by_trainee(current_user.username)
+    return render_template('/training-sessions.html', current_user = current_user, trainers = trainers)
+
 
 @socketio.on('join')
 def join(data):
     #print(data['room_name'])
     join_room(data['room'])
-    send({'msg':data['uname'] + " has joined the " + data['room_name'] + " room."},
-          room=data['room']
-         )
+    #send({'msg':data['uname'] + " has joined the " + data['room_name'] + " room."},
+    #      room=data['room']
+    #     )
 
 @socketio.on('leave')
 def leave(data):
 
     leave_room(data['room_name'])
-    send({'msg': data['uname'] +" has left the " + data['room_name'] + " room."},
-          room=data['room']
-         )
+    #send({'msg': data['uname'] +" has left the " + data['room_name'] + " room."},
+    #      room=data['room']
+    #     )
 
 @app.route('/Friends',methods = ['POST','GET'])
 @login_required
@@ -227,3 +232,20 @@ def friends():
         form = request.form
         print(form['uname'])
         return redirect('Home')
+
+@app.route('/addTrainer/<trainer_username>')
+@login_required
+def addTrainer(trainer_username):
+    if current_user.isTrainer:
+        return redirect('Home')
+    else:
+        if not partnership_exists(current_user.username,trainer_username):
+            user_trainer = UserTrainer(trainee_username = current_user.username,
+                                       trainee_fname = current_user.fname,
+                                       trainee_lname = current_user.lname,
+                                       trainer_username = trainer_username,
+                                       trainer_fname = get_user(trainer_username).fname,
+                                       trainer_lname = get_user(trainer_username).lname)
+            db.session.add(user_trainer)
+            db.session.commit()
+            return redirect('/chat/'+trainer_username)

@@ -25,9 +25,12 @@
                     </div>
                     <ul class="nav navbar-nav laptop">
                         <li><a href="/Home">Home</a></li>
-                        <li><a href="/TrainerSearch">Trainer Search</a></li>
-                        <li><a href="/Friends">Friends</a></li>
+                        {%if not is_trainer %}
+                            <li><a href="/TrainerSearch">Trainer Search</a></li>
+                            <li><a href="/Friends">Friends</a></li>
+                        {% endif %}
                         <li><a href="/TrainingSessions">Sessions</a></li>
+                        
                     </ul>
                     <ul class="nav navbar-nav navbar-right laptop">
                         <li>
@@ -43,8 +46,10 @@
             <div id="mySidebar" class="sidebar">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
                 <a href="/">Home</a>
-                <a href="/TrainerSearch">Trainer Search</a>
-                <a href="/Friends">Friends</a>
+                {%if not is_trainer %}
+                        <a href="/TrainerSearch">Trainer Search</a>
+                        <a href="/Friends">Friends</a>
+                {% endif %}
                 <a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
             </div>
             

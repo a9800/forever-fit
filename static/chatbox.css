@@ -32,7 +32,7 @@ background: rgb(78, 78, 78);
 
 @media (max-width : 711px){
     .chat-holder{
-        height: 560px;
+        height: 420px;
     }
     .rooms{
         height: 350px;
@@ -46,10 +46,14 @@ background: rgb(78, 78, 78);
     .room{
         border-radius: 5px;
     }
+    .add-friend{
+        width: 40px;
+        font-size: 20px;
+    }
 }
 @media (min-width : 711px){
     .chat-holder{
-        height: 700px;
+        height: 580px;
     }
     .rooms{
         height: 764px;
@@ -59,8 +63,43 @@ background: rgb(78, 78, 78);
     .room{
         border-radius: 5px;
     }
+    .add-friend{
+        width: 60px;
+        font-size: 32px;
+    }
+}
+.tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
+.tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
 button{
     width: 80px;
     margin-top: 5px;
@@ -79,6 +118,12 @@ button{
     margin-bottom: 5px;
     padding-left: 10px;
     padding-top: 10px;
+}
+
+.highlight{
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--blue)
 }
 
 .flex-row{
@@ -114,6 +159,11 @@ button{
 .darker {
   border-color: #ccc;
   background-color: #ddd;
+}
+
+.add-friend{
+    position: relative;
+    float:right;
 }
 
 .chat_container::after {

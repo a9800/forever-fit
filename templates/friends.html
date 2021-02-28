@@ -47,6 +47,17 @@
                 <a href="/TrainingSessions">Sessions</a>
             </div>
             <div class="friend-body">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div style="border-radius: 5px; background-color: #e54b4b; padding-top: 5px; 
+                                    padding-bottom: 3px; width: 200px; margin-bottom: 20px; 
+                                    display:flex; justify-content: center;">
+                        {% for message in messages %}
+                            <p style="color: white;">{{ message }}</p>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
                 <p onclick="hide()" class="add-friend small">
                     + Add Friend
                 </p>

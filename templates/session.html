@@ -12,7 +12,9 @@
         <link rel="stylesheet" href="../static/chatbox.css" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet" />      
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet" />
+        <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>  
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
     </head>
 
     <body>
@@ -48,14 +50,23 @@
                 <a href="/TrainingSessions">Sessions</a>
                 <a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
             </div>
-            <p onclick="openChats()" class="big chat-btn">Chats</p>
+            <p onclick="openChats()" class="big chat-btn">
+                <i class="fa fa-chevron-right"></i>
+                Chats
+            </p>
             <div class="chatbox">
                 
                 <div class="rooms" id="rooms">
                     {% for room in rooms %}
-                        <a id="select-room" href="{{room.trainer_username}}" room_id="{{room.id}}" class="room">
-                            {{room.trainer_fname}} {{room.trainer_lname}}
-                        </a>
+                        {% if room.trainer_username == curr_room.trainer_username %}
+                            <a id="select-room" href="{{room.trainer_username}}" room_id="{{room.id}}" class="room highlight">
+                                {{room.trainer_fname}} {{room.trainer_lname}}
+                            </a>
+                        {% else %}
+                            <a id="select-room" href="{{room.trainer_username}}" room_id="{{room.id}}" class="room">
+                                {{room.trainer_fname}} {{room.trainer_lname}}
+                            </a>
+                        {% endif %}
                     {% endfor %}
                     <a id="curr_room" style="display: none;">{{curr_room.trainer_username}}</a>
                 </div>
@@ -76,6 +87,16 @@
                 </script>
                 
                 <div class="chat">
+                    <div class="chat_container big">
+                        <img src="../static/images/profile-picture.jpeg" alt="ProfilePicture" class="profile-picture">
+                        {{curr_room.trainer_fname}} {{curr_room.trainer_lname}}
+                        {% if not partnership %}
+                            <i class='add-friend fas fa-user-plus' onclick="window.location='/addTrainer/{{curr_room.trainer_username}}'">
+                            </i>
+                        {% else %}
+                            <p class="small">✓ Your Trainer</p>
+                        {% endif %}
+                    </div>
                     <div id="chat_scroll" class="chat-holder">
                         <div id="chat_history">
                             
