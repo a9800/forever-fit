@@ -41,10 +41,11 @@
         <main>
             <div id="mySidebar" class="sidebar">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                <a href="#">Trainer Search</a>
+                <a href="/TrainerSearch">Trainer Search</a>
                 <a href="/Friends">Friends</a>
                 <a href="/chats">Chats</a>
                 <a href="/TrainingSessions">Sessions</a>
+                <a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
             </div>
             <div class=" widget-holder">
                 <div class="widget">
@@ -78,6 +79,45 @@
                     {%endif%}
                 </div>
             </div>
+            <div class="widget-holder">
+                <div class="widget">
+                    <div class="big">Friend Table</div>
+                    <hr>
+                    <table>
+                        <tr class="top-table">
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Sessions</th>
+                        </tr>
+                        {% if friends %}
+                            {%for friend in friends%}
+                                <tr>
+                                    <td class="count"></td>
+                                    
+                                    <td>
+                                    {% if friend.username_1 == current_user.username %}
+                                        {{friend.user2_fname}} {{friend.user2_lname}}
+                                    {% else %}
+                                        {{friend.user1_fname}} {{friend.user1_lname}}
+                                    {% endif %}
+                                    </td>
+                                    <td>4</td>
+                                    
+                                </tr>
+                            {%endfor%}
+                        {%else%}
+                            <td></td>
+                            <td>You have no friends add some through friend search</td>
+                            <td><a class="btn btn-primary active btn-right">Friends</a></td>
+                        {%endif%}
+                        <tr class="bottom-table">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </main>
         <script>
             function openNav() {
@@ -88,6 +128,12 @@
             function closeNav() {
                 document.getElementById("mySidebar").style.width = "0";
                 document.getElementById("main").style.marginLeft = "0";
+            }
+
+            x = document.getElementsByClassName('count')
+        
+            for (i = 0; i < x.length; i++){
+                x[i].innerHTML = i + 1;
             }
         </script>
     </body>

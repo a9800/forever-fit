@@ -340,6 +340,14 @@ button:hover {
   clear: both;
   display: table;
 }
+
+.error{
+  color: white;
+  border-radius: 5px; 
+  background-color: #e54b4b;
+  padding:5px 5px 5px 5px;
+  margin-bottom: 20px;
+}
 /* Change styles for cancel button and signup button on extra small screens */
 @media screen and (max-width: 300px) {
   .cancelbtn, .signupbtn {
@@ -629,13 +637,20 @@ button:hover {
   .chat{
     width: 90%;
   }
+
   .hs{
     grid-template-columns: repeat(6, calc(70% - var(--gutter) * 2));
+  }
+  .dropdown-menu{
+    width:100%
   }
 }
 @media (min-width : 711px){
   .tgoals{
     width: 75%;
+  }
+  .dropdown-menu{
+    width: 400px;
   }
 
   .filter-div{
@@ -719,9 +734,12 @@ td, th {
   padding: 10px;
 }
 
+
 tr:nth-child(even) {
   background-color: var(--lightgrey);
 }
+
+
 
 table{
   background-color: var(--grey);
@@ -764,6 +782,11 @@ table{
   box-shadow: 2px 2px 2px 2px var(--black);
 }
 
+tr:nth-last-child(1){
+  border-bottom-left-radius: 10px; 
+  border-bottom-right-radius: 10px;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
@@ -797,4 +820,43 @@ background: rgb(78, 78, 78);
 .request{
   width: 100px;
   align-self: end;
+}
+
+.dropdown-menu{
+  background-color: var(--lightgrey);
+  border-radius: 10px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  height: auto;
+  max-height: 300px;
+  overflow-x: hidden;
+}
+
+.dropdown-item{
+  width:100%;
+  color:var(--white);
+  background-color: var(--grey);
+  height: 70px;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  padding: 15px 10px 10px 10px;
+}
+
+.btn-primary{
+  background-color: var(--blue);
+}
+
+.friend-request{
+  position: relative;
+  float:right;
+}
+
+.row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.friend-btn{
+  height: 40px;
 }

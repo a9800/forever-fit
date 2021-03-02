@@ -2,7 +2,7 @@ from main import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import desc
-
+from sqlalchemy import or_
 class User(UserMixin,db.Model):
     __tablename__ = 'user'
     username = db.Column(db.String(80), unique=True, primary_key=True)
@@ -66,11 +66,23 @@ class CompletedSessions(UserMixin,db.Model):
     trainer_username = db.Column(db.String(80),db.ForeignKey('user.username'))
     date = db.Column(db.String(120), nullable=False)
 
+class FriendRequest(UserMixin,db.Model):
+    __tablename__ = 'friend_requests'
+    id = db.Column(db.Integer, primary_key = True)
+    requester = db.Column(db.String(80),db.ForeignKey('user.username'))
+    requester_fname = db.Column(db.String(80),db.ForeignKey('user.fname'))
+    requester_lname = db.Column(db.String(80),db.ForeignKey('user.lname'))
+    reciever = db.Column(db.String(80),db.ForeignKey('user.username'))
+
 class Friends(UserMixin,db.Model):
     __tablename__ = 'friends'
     id = db.Column(db.Integer, primary_key = True)
-    trainee_username = db.Column(db.String(80),db.ForeignKey('user.username'))
-    trainer_username = db.Column(db.String(80),db.ForeignKey('user.username'))
+    username_1 = db.Column(db.String(80),db.ForeignKey('user.username'))
+    user1_fname = db.Column(db.String(80),db.ForeignKey('user.fname'))
+    user1_lname = db.Column(db.String(80),db.ForeignKey('user.lname'))
+    username_2 = db.Column(db.String(80),db.ForeignKey('user.username'))
+    user2_fname = db.Column(db.String(80),db.ForeignKey('user.fname'))
+    user2_lname = db.Column(db.String(80),db.ForeignKey('user.lname'))
 
 class UserTrainer(UserMixin,db.Model):
     __tablename__ = 'user_trainer'
@@ -129,5 +141,29 @@ def get_chats():
 def get_chat_history(room):
     return ChatHistory.query.filter_by(room = room).all()
 
+def friendship_exists(uname1,uname2):
+    return (friendship_exists_helper(uname1,uname2) or friendship_exists_helper(uname2,uname1))
+
+def friendship_exists_helper(uname1,uname2):
+    return bool(Friends.query.filter_by(username_1 = uname1, 
+                                        username_2 = uname2).first())
+
+def friend_request_exists(uname1,uname2):
+    return (friend_request_exists_helper(uname1,uname2) or friend_request_exists_helper(uname2,uname1))
+
+def friend_request_exists_helper(uname1,uname2):
+    return bool(FriendRequest.query.filter_by(requester = uname1,reciever = uname2).first())
+
+def get_friends(uname):
+    return Friends.query.filter(or_(Friends.username_1 == uname, Friends.username_2==uname)).all()
+
+def limit_get_friends(uname,limit):
+    return Friends.query.filter(or_(Friends.username_1 == uname, Friends.username_2==uname)).limit(limit).all()
+
+def get_friend_requests(uname):
+    return FriendRequest.query.filter_by(reciever = uname).all()
+
+def delete_friend_request(requester,reciever):
+    FriendRequest.query.filter_by(requester=requester,reciever=reciever).delete()
 if __name__ == "__main__":
     db.create_all()

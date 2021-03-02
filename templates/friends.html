@@ -7,11 +7,12 @@
         <meta name="theme-color" content="#7952b3" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="../static/main.css" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="../static/main.css" />
     </head>
 
     <body>
@@ -45,34 +46,61 @@
                 <a href="TrainerSearch">Trainer Search</a>
                 <a href="/chats">Chats</a>
                 <a href="/TrainingSessions">Sessions</a>
+                <a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
+
             </div>
             <div class="friend-body">
                 {% with messages = get_flashed_messages() %}
                     {% if messages %}
-                        <div style="border-radius: 5px; background-color: #e54b4b; padding-top: 5px; 
-                                    padding-bottom: 3px; width: 200px; margin-bottom: 20px; 
-                                    display:flex; justify-content: center;">
                         {% for message in messages %}
-                            <p style="color: white;">{{ message }}</p>
+                            <p class="error">{{ message }}</p>
                         {% endfor %}
-                        </div>
                     {% endif %}
                 {% endwith %}
-                <p onclick="hide()" class="add-friend small">
-                    + Add Friend
-                </p>
+                <div class="row">
+                    <p onclick="hide()" type="button" class="btn btn-primary small friend-btn">
+                        + Add Friend
+                    </p>
 
-                <div id="addFriend" class="addFriend">
+                    <div class="dropdown">
+                        <p class="btn btn-primary dropdown-toggle small friend-btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-chevron-down" style="font-size: 15px;"></i>
+                            Friend Requests
+                        </p>
+                        <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+                            {% if requests %}
+                                {% for request in requests %}
+                                    <div class="dropdown-item small" href="#">
+                                        {{request.requester_fname}} {{request.requester_lname}}
+                                        <div class="friend-request">
+                                            <a href="friend_accept/{{request.requester}}"class="btn btn-primary dropdown-toggle">
+                                                &#10003;
+                                            </a>
+                                            <a href="friend_deny/{{request.requester}}" class="btn btn-primary dropdown-toggle">
+                                                X
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p class="small">No new friend requests</p>
+                            {% endif %}
+                            
+                        </div>
+                      </div>
+                </div>
+
+                <div id="addFriend" class="addFriend" style="display: none;">
                     <hr>
                     <form method="post">
-                        <label for="uname" class="big">Add friend by username</label>
+                        <div for="uname" class="big">Add friend by username</div>
                         <input type="text" placeholder="Enter firstname" name="uname" required />
 
                         <button type="submit" class="request">SEND</button>
                     </form>
                 </div>
 
-                <div class="big">Track your friends progress</div>
+                <div class="big" style="margin-top: 25px;">Track your friends progress</div>
                 <hr>
 
                 <table>
@@ -81,21 +109,25 @@
                         <th>Name</th>
                         <th>Sessions</th>
                     </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Abdelrahman Elkabbany</td>
-                        <td>4</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Humaid AlQassimi</td>
-                        <td>4</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Euan Gordon</td>
-                        <td>10</td>
-                    </tr>
+                    {% if friends %}
+                        {%for friend in friends%}
+                            <tr>
+                                <td class="count"></td>
+                                <td>
+                                {% if friend.username_1 == current_user.username %}
+                                    {{friend.user2_fname}} {{friend.user2_lname}}
+                                {% else %}
+                                    {{friend.user1_fname}} {{friend.user1_lname}}
+                                {% endif %}
+                                </td>
+                                <td>4</td>
+                            </tr>
+                        {%endfor%}
+                    {%else%}
+                        <td></td>
+                        <td>You have no friends add some through friend search</td>
+                        <td></td>
+                    {%endif%}
                     <tr class="bottom-table">
                         <td></td>
                         <td></td>
@@ -122,6 +154,12 @@
                 } else {
                   x.style.display = "none";
                 }
+            }
+
+            x = document.getElementsByClassName('count')
+        
+            for (i = 0; i < x.length; i++){
+                x[i].innerHTML = i + 1;
             }
         </script>
     </body>

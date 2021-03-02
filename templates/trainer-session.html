@@ -51,9 +51,15 @@
                 
                 <div class="rooms" id="rooms">
                     {% for room in rooms %}
-                        <a id="select-room" href="{{room.trainee_username}}" room_id="{{room.id}}" class="room">
-                            {{room.trainee_fname}} {{room.trainee_lname}}
-                        </a>
+                        {% if room.trainee_username == curr_room.trainee_username %}
+                            <a id="select-room" href="{{room.trainee_username}}" room_id="{{room.id}}" class="room highlight">
+                                {{room.trainee_fname}} {{room.trainee_lname}}
+                            </a>
+                        {% else %}
+                            <a id="select-room" href="{{room.trainee_username}}" room_id="{{room.id}}" class="room">
+                                {{room.trainee_fname}} {{room.trainee_lname}}
+                            </a>
+                        {% endif %}
                     {% endfor %}
                     <a id="curr_room" style="display: none;">{{curr_room.trainee_username}}</a>
                 </div>
@@ -74,6 +80,13 @@
                 </script>
                 
                 <div class="chat">
+                    <div class="chat_container big">
+                        <img src="../static/images/profile-picture.jpeg" alt="ProfilePicture" class="profile-picture">
+                        {{curr_room.trainee_fname}} {{curr_room.trainee_lname}}
+                        {% if partnership %}
+                            <p class="small">✓ Your Client</p>
+                        {% endif %}
+                    </div>
                     <div id="chat_scroll" class="chat-holder">
                         <div id="chat_history">
                             

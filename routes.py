@@ -56,7 +56,7 @@ def SignUpTrainer():
          return redirect('Home')
 
     if request.method == 'GET':
-        return render_template('signup-trainer.html',form=RegisterForm())
+        return render_template('signup-trainer.html')
 
     if request.method == 'POST':
         form = request.form
@@ -99,9 +99,10 @@ def Login():
 @app.route('/Home')
 @login_required
 def Home():
-    if(current_user.isTrainer != True):
+    if(not current_user.isTrainer):
+        friends = limit_get_friends(current_user.username,5)
         recent_rooms = get_limit_rooms_by_trainee_id(current_user.username,2)
-        return render_template('home.html',recent_rooms=recent_rooms)
+        return render_template('home.html',recent_rooms=recent_rooms,friends=friends)
     else:
         recent_rooms = get_limit_rooms_by_trainer_id(current_user.username,2)
         return render_template('trainer-home.html',recent_rooms=recent_rooms)
@@ -171,9 +172,12 @@ def sessions(uname):
 
         messages = get_chat_history(curr_room.id)
 
+        partnership = partnership_exists(uname,current_user.username)
+
         return render_template('trainer-session.html',uname = uname, curr_uname = current_user.username,
                                 curr_fname = current_user.fname, curr_lname = current_user.lname, 
-                                rooms=ROOMS, messages = messages, curr_room = curr_room)
+                                rooms=ROOMS, messages = messages, curr_room = curr_room,
+                                partnership=partnership)
 
 @socketio.on('message')
 def message(data):
@@ -218,20 +222,68 @@ def leave(data):
     #      room=data['room']
     #     )
 
-@app.route('/Friends',methods = ['POST','GET'])
+@app.route('/Friends', methods = ['POST','GET'])
 @login_required
 def friends():
     if request.method == 'GET':
         if(not current_user.isTrainer):
-            return render_template('friends.html')
+            requests = get_friend_requests(current_user.username)
+            friends = get_friends(current_user.username)
+            return render_template('friends.html',requests = requests,user=current_user.username,friends=friends)
         else:
             return redirect('Home')
     
     if request.method == 'POST':
-        print("HELLLOOO")
         form = request.form
-        print(form['uname'])
-        return redirect('Home')
+        #print('\n\n\n'+form['uname']+'\n\n\n')
+        
+        if not user_exits(form['uname']):
+            flash(form['uname']+' Is not a valid username')
+            return redirect('Friends')
+
+        elif get_user(form['uname']).isTrainer:
+            flash('User '+form['uname']+' is not a Trainee, You can only send friend requests to trainees')
+            return redirect('Friends')
+
+        elif friendship_exists(current_user.username, form['uname']):
+            flash('User '+form['uname']+' is already your friend')
+            return redirect('Friends')
+
+        elif friend_request_exists(current_user.username,form['uname']):
+            flash('You or user '+ form['uname'] + " have already sent a friend request to each other")
+            return redirect('Friends')
+
+        else:
+            req = FriendRequest(requester = current_user.username,
+                                requester_fname = current_user.fname,
+                                requester_lname = current_user.lname,
+                                reciever = form['uname'])
+
+            db.session.add(req)
+            db.session.commit()
+            flash('You have sent '+form['uname']+' a friend request')
+            
+            return redirect('Friends')
+
+@app.route('/friend_accept/<uname>')
+@login_required
+def friend_accept(uname):
+    if friend_request_exists(uname,current_user.username):
+        delete_friend_request(uname,current_user.username)
+        friendship = Friends(
+            username_1 = current_user.username,
+            user1_fname = current_user.fname,
+            user1_lname = current_user.lname,
+            username_2 = uname,
+            user2_fname = get_user(uname).fname,
+            user2_lname = get_user(uname).lname
+        )
+        db.session.add(friendship)
+        db.session.commit()
+
+        return redirect('/Friends')
+    else:
+        return redirect('/Friends')
 
 @app.route('/addTrainer/<trainer_username>')
 @login_required
