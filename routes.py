@@ -200,12 +200,58 @@ def message(data):
 @login_required
 def training_sessions():
     if current_user.isTrainer:
-        ROOMS = get_rooms_by_trainer_id(current_user.username)
+        trainers = get_trainees_by_trainer(current_user.username)
+        requests = get_session_requests_by_trainerid(current_user.username)
+        sessions = get_sessions_by_trainerid(current_user.username)
+        return render_template('training-sessions.html', current_user = current_user, trainers = trainers, requests = requests,
+                                sessions = sessions)
     else:
         trainers = get_trainers_by_trainee(current_user.username)
-    return render_template('/training-sessions.html', current_user = current_user, trainers = trainers)
+        sessions = get_sessions_by_traineeid(current_user.username)
+        return render_template('training-sessions.html', current_user = current_user, trainers = trainers, sessions = sessions)
 
+@app.route('/BookSession/<uname>',methods=['POST','GET'])
+@login_required
+def book_session(uname):
+    if request.method == 'GET':
+        if current_user.isTrainer:
+            return redirect('/Home')
+        else:
+            return render_template('book-session.html',trainer=get_user(uname))
+    
+    if request.method == 'POST':
+        form = request.form
+        session = Sessions(
+                    trainee_username = current_user.username,
+                    trainee_fname = current_user.fname,
+                    trainee_lname = current_user.lname,
+                    trainer_username = uname,
+                    trainer_fname = get_user(uname).fname,
+                    trainer_lname = get_user(uname).lname,
+                    date = form['date'],
+                    time = form['time'],
+                    completed = False,
+                    accepted = False
+        )
+        db.session.add(session)
+        db.session.commit()
+        flash('You have sent '+get_user(uname).fname+' a session request')
+        return redirect('/TrainingSessions')
 
+@app.route('/session_accept/<id>')
+@login_required
+def session_accept(id):
+    session = get_session_requests_by_id(id)
+    session.accepted = True
+    db.session.commit()
+    return redirect('/TrainingSessions')
+
+@app.route('/session_deny/<id>')
+@login_required
+def session_deny(id):
+    delete_session_request(id)
+    return redirect('/TrainingSessions')
+    
 @socketio.on('join')
 def join(data):
     #print(data['room_name'])
@@ -280,6 +326,16 @@ def friend_accept(uname):
         )
         db.session.add(friendship)
         db.session.commit()
+
+        return redirect('/Friends')
+    else:
+        return redirect('/Friends')
+
+@app.route('/friend_deny/<uname>')
+@login_required
+def friend_deny(uname):
+    if friend_request_exists(uname,current_user.username):
+        delete_friend_request(uname,current_user.username)
 
         return redirect('/Friends')
     else:

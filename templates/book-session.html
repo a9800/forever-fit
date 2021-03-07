@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Home</title>
+        <title>Book Session</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="theme-color" content="#7952b3" />
@@ -12,6 +12,8 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet" />
+        
+
     </head>
 
     <body>
@@ -23,8 +25,12 @@
                         <h3 class="logo" href="#">FOREVER FIT</h3>
                     </div>
                     <ul class="nav navbar-nav laptop">
+                        <li><a href="/">Home</a></li>
+                        {% if (not current_user.isTrainer) %}
+                            <li><a href="/TrainerSearch">Trainer Search</a></li>
+                            <li><a href="/Friends">Friends</a></li>                
+                        {% endif %}
                         <li><a href="/chats">Chats</a></li>
-                        <li><a href="/TrainingSessions">Sessions</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right laptop">
                         <li>
@@ -37,43 +43,32 @@
         </header>
 
         <main>
-            <div id="mySidebar" class="sidebar">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                <a href="/SignUp">Home</a>
-                <a href="/chats">Chats</a>
-                <a href="/TrainingSessions">Sessions</a>
-                <a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
-            </div>
-            <div class=" widget-holder">
-                <div class="widget">
-                    <div class="big">Upcoming Sessions</div>
-                    <hr>
-                    <div class="small">You have no upcoming sessions, set a session up with one of your trainees</div>
+            <div class="sign-up-sheet">
+                <p class="big">Book a session with {{trainer.fname}}</p>
+                <hr>
+                <form method="post">
                     <br>
-                </div>
-                <div class="widget">
-                    <div class="big">Recent Chats</div>
-                    <hr>
-                    {% if recent_rooms %}
-                        <div class="flex-row">
-                            {% for rooms in recent_rooms %}
-                                <div class="home-trainer2">
-                                    <p class="small">{{rooms.trainee_fname}} {{rooms.trainee_lname}}</p>
-                                    <a href="/chat/{{rooms.trainee_username}}" class="btn btn-primary active btn-right" role="button">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
-                                            <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                                        </svg>
-                                        Message
-                                    </a>
-                                </div>
-                            {% endfor %}
+                    
+                    <div class="flex-row">
+                        <div>
+                        <p class="small">Choose a date</p>
+                        <input type="date" id="date" name="date" 
+                               class="birthday" max="2100-12-30" required/>
                         </div>
-                    {% else %}
-                        <div class="small">No recent chats, wait for a trainee to spot your profile and send you a message</div>
-                        <br>
-    
-                    {%endif%}
-                </div>
+
+                        <div>
+                        <p class="small">Time</p>
+                        <input type="time" id="time" name="time">
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <div class="center-btn">
+                        <button type="submit" class="signupbtn">Book</button>
+                    </div>
+                    
+                </form>
             </div>
         </main>
         <script>
@@ -86,6 +81,22 @@
                 document.getElementById("mySidebar").style.width = "0";
                 document.getElementById("main").style.marginLeft = "0";
             }
+
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1; //January is 0!
+            var yyyy = today.getFullYear();
+            if(dd<10){
+                dd='0'+dd
+            } 
+            if(mm<10){
+                mm='0'+mm
+            } 
+            
+            
+            today = yyyy+'-'+mm+'-'+dd;
+            console.log(today)
+            document.getElementById("date").setAttribute("min", today);
         </script>
     </body>
 </html>

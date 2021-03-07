@@ -1,3 +1,4 @@
+from flask.globals import session
 from main import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -45,26 +46,19 @@ class UserRooms(UserMixin,db.Model):
     trainer_fname = db.Column(db.String(80))
     trainer_lname = db.Column(db.String(80))
 
-class ProposedSessions(UserMixin,db.Model):
-    __tablename__ = 'proposed_sessions'
-    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    trainee_username = db.Column(db.String(80),db.ForeignKey('user.username'))
-    trainer_username = db.Column(db.String(80),db.ForeignKey('user.username'))
-    date = db.Column(db.String(120), nullable=False)
-
-class UpcomingSessions(UserMixin,db.Model):
+class Sessions(UserMixin,db.Model):
     __tablename__ = 'upcoming_sessions'
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     trainee_username = db.Column(db.String(80),db.ForeignKey('user.username'))
+    trainee_fname = db.Column(db.String(80))
+    trainee_lname = db.Column(db.String(80))
     trainer_username = db.Column(db.String(80),db.ForeignKey('user.username'))
+    trainer_fname = db.Column(db.String(80))
+    trainer_lname = db.Column(db.String(80))
     date = db.Column(db.String(120), nullable=False)
-
-class CompletedSessions(UserMixin,db.Model):
-    __tablename__ = 'completed_sessions'
-    id = db.Column(db.Integer, primary_key = True)
-    trainee_username = db.Column(db.String(80),db.ForeignKey('user.username'))
-    trainer_username = db.Column(db.String(80),db.ForeignKey('user.username'))
-    date = db.Column(db.String(120), nullable=False)
+    time = db.Column(db.String(120), nullable=False)
+    completed =  db.Column(db.Boolean, nullable = False)
+    accepted = db.Column(db.Boolean,nullable = False)
 
 class FriendRequest(UserMixin,db.Model):
     __tablename__ = 'friend_requests'
@@ -100,6 +94,9 @@ def partnership_exists(user_uname, trainer_uname):
 
 def get_trainers_by_trainee(uname):
     return UserTrainer.query.filter_by(trainee_username=uname).all()
+
+def get_trainees_by_trainer(uname):
+    return UserTrainer.query.filter_by(trainer_username=uname).all()
 
 def user_exits(uname):
     return bool(User.query.filter_by(username=uname).first())
@@ -165,5 +162,21 @@ def get_friend_requests(uname):
 
 def delete_friend_request(requester,reciever):
     FriendRequest.query.filter_by(requester=requester,reciever=reciever).delete()
+
+def get_session_requests_by_trainerid(uname):
+    return Sessions.query.filter_by(trainer_username = uname, accepted = False).all()
+
+def get_sessions_by_trainerid(uname):
+    return Sessions.query.filter_by(trainer_username = uname, accepted = True).all()
+
+def get_sessions_by_traineeid(uname):
+    return Sessions.query.filter_by(trainee_username = uname, accepted = True).all()
+
+def get_session_requests_by_id(id):
+    return Sessions.query.filter_by(id = id).first()
+
+def delete_session_request(id):
+    Sessions.query.filter_by(id = id).delete()
+
 if __name__ == "__main__":
     db.create_all()
