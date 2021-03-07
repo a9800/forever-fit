@@ -175,6 +175,12 @@ def get_sessions_by_traineeid(uname):
 def get_session_requests_by_id(id):
     return Sessions.query.filter_by(id = id).first()
 
+def get_upcoming_sessions_by_trainee_id(uname,limit):
+    return Sessions.query.filter_by(trainee_username = uname).limit(limit).all()
+
+def get_upcoming_sessions_by_trainer_id(uname,limit):
+    return Sessions.query.filter_by(trainer_username = uname).limit(limit).all()
+
 def delete_session_request(id):
     Sessions.query.filter_by(id = id).delete()
 

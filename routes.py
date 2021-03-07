@@ -102,10 +102,12 @@ def Home():
     if(not current_user.isTrainer):
         friends = limit_get_friends(current_user.username,5)
         recent_rooms = get_limit_rooms_by_trainee_id(current_user.username,2)
-        return render_template('home.html',recent_rooms=recent_rooms,friends=friends)
+        upcoming_sessions = get_upcoming_sessions_by_trainee_id(current_user.username,2)
+        return render_template('home.html',recent_rooms=recent_rooms,friends=friends,upcoming_sessions=upcoming_sessions)
     else:
         recent_rooms = get_limit_rooms_by_trainer_id(current_user.username,2)
-        return render_template('trainer-home.html',recent_rooms=recent_rooms)
+        upcoming_sessions = get_upcoming_sessions_by_trainer_id(current_user.username,2)
+        return render_template('trainer-home.html',recent_rooms=recent_rooms, upcoming_sessions=upcoming_sessions)
 
 @app.route('/TrainerSearch')
 @login_required

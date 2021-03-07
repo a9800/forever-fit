@@ -51,9 +51,22 @@
                 <div class="widget">
                     <div class="big">Upcoming Sessions</div>
                     <hr>
-                    <div class="small">You have no upcoming sessions, book one with one of our trainers</div>
-                    <br>
-                    <a href="/TrainerSearch" class="btn btn-primary active btn-right" role="button">Trainer Search</a>
+                    {% if upcoming_sessions %}
+                        <div class="flex-row">
+                            {% for session in upcoming_sessions %}
+                                <div class="home-trainer2">
+                                    <p class="small">{{session.trainer_fname}} {{session.trainer_lname}}</p>
+                                    <p class="smaller">{{session.date}} {{session.time}} </p>
+                                    
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="small">You have no upcoming sessions, book one with one of our trainers</div>
+                        <br>
+                        <a href="/TrainerSearch" class="btn btn-primary active btn-right" role="button">Trainer Search</a>
+                    {%endif%}
+                    
                 </div>
                 <div class="widget">
                     <div class="big">Recent Chats</div>

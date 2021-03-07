@@ -48,8 +48,21 @@
                 <div class="widget">
                     <div class="big">Upcoming Sessions</div>
                     <hr>
-                    <div class="small">You have no upcoming sessions, set a session up with one of your trainees</div>
-                    <br>
+                    {% if upcoming_sessions %}
+                        <div class="flex-row">
+                            {% for session in upcoming_sessions %}
+                                <div class="home-trainer2">
+                                    <p class="small">{{session.trainee_fname}} {{session.trainee_lname}}</p>
+                                    <p class="smaller">{{session.date}} {{session.time}} </p>
+
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="small">You have no upcoming sessions, set a session up with one of your trainees</div>
+                        <br>
+                    {%endif%}
+                    
                 </div>
                 <div class="widget">
                     <div class="big">Recent Chats</div>

@@ -81,10 +81,7 @@ html, body {
  .smaller{
   font-size: 14px;
   }
-  .flex-container {
-      display: flex;
-      flex-direction: column;
- }
+  
  .trainer-details{
   font-size: 12px;
   }
@@ -642,11 +639,6 @@ button:hover {
   .home-trainer2{
     margin-bottom: 7px;
   }
-  .friend-body{
-    padding-top: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
-  }
   .add-friend{
     height: 50px;
     padding: 13px 5px 5px 8px;
@@ -656,9 +648,6 @@ button:hover {
     width: 90%;
   }
 
-  .hs{
-    grid-template-columns: repeat(6, calc(85% - var(--gutter) * 2));
-  }
   .dropdown-menu{
     width:100%
   }
@@ -671,7 +660,7 @@ button:hover {
     bottom: 60px;
   }
   .tgoals{
-    width: 75%;
+    width: 72%;
   }
   .dropdown-menu{
     width: 400px;
@@ -706,11 +695,7 @@ button:hover {
     flex-direction: row;
     justify-content: space-evenly;
   }
-  .friend-body{
-    padding-top: 50px;
-    padding-left: 30%;
-    padding-right: 30%;
-  }
+  
 
   .add-friend{
     height: 50px;
@@ -718,9 +703,6 @@ button:hover {
     width: 135px;
   }
 
-  .hs{
-    grid-template-columns: repeat(6, calc(50% - var(--gutter) * 2));
-  }
   .home-trainer{
     width:300px
   }
@@ -905,4 +887,53 @@ background: rgb(78, 78, 78);
 .center-btn{
   display: flex;
   justify-content: center;
+}
+
+@media (max-width : 800px){
+  .hs{
+    grid-template-columns: repeat(6, calc(85% - var(--gutter) * 2));
+  }
+  .friend-body{
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .flex-container {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (min-width : 900px){
+  .hs{
+    grid-template-columns: repeat(6, calc(60% - var(--gutter) * 2));
+  }
+  .friend-body{
+    padding-top: 15px;
+    padding-left: 15%;
+    padding-right: 15%;
+  }
+  .flex-container {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (min-width : 1000px){
+  .hs{
+    grid-template-columns: repeat(6, calc(50% - var(--gutter) * 2));
+  }
+  .friend-body{
+    padding-top: 15px;
+    padding-left: 30%;
+    padding-right: 30%;
+  }
+  .flex-container {
+    margin-top: 100px;
+    margin-bottom:100px;
+    margin-left:40px;
+    display: flex;
+    flex-direction: row;
+  }
 }
