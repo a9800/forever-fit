@@ -53,8 +53,12 @@
                             {% for session in upcoming_sessions %}
                                 <div class="home-trainer2">
                                     <p class="small">{{session.trainee_fname}} {{session.trainee_lname}}</p>
-                                    <p class="smaller">{{session.date}} {{session.time}} </p>
-
+                                    <div class="flex-row">
+                                        <p class="smaller">{{session.date}} {{session.time}} </p>
+                                        <a href="/Class/{{session.id}}" class="btn btn-primary active btn-right" role="button">
+                                            Join
+                                        </a>
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>

@@ -4,6 +4,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import desc
 from sqlalchemy import or_
+
 class User(UserMixin,db.Model):
     __tablename__ = 'user'
     username = db.Column(db.String(80), unique=True, primary_key=True)
@@ -13,6 +14,9 @@ class User(UserMixin,db.Model):
     password = db.Column(db.String(120), nullable=False)
     isTrainer = db.Column(db.Boolean, nullable = False)
     fitnessGoals = db.Column(db.String(120), nullable=True)
+    sessionsCompleted = db.Column(db.Integer, nullable=False)
+    rating = db.Column(db.Integer, nullable=True)
+    about = db.Column(db.String(120), nullable=True)
 
     def set_password(self,password):
         self.password = generate_password_hash(password)
@@ -72,11 +76,11 @@ class Friends(UserMixin,db.Model):
     __tablename__ = 'friends'
     id = db.Column(db.Integer, primary_key = True)
     username_1 = db.Column(db.String(80),db.ForeignKey('user.username'))
-    user1_fname = db.Column(db.String(80),db.ForeignKey('user.fname'))
-    user1_lname = db.Column(db.String(80),db.ForeignKey('user.lname'))
+    user1_fname = db.Column(db.String(80))
+    user1_lname = db.Column(db.String(80))
     username_2 = db.Column(db.String(80),db.ForeignKey('user.username'))
-    user2_fname = db.Column(db.String(80),db.ForeignKey('user.fname'))
-    user2_lname = db.Column(db.String(80),db.ForeignKey('user.lname'))
+    user2_fname = db.Column(db.String(80))
+    user2_lname = db.Column(db.String(80))
 
 class UserTrainer(UserMixin,db.Model):
     __tablename__ = 'user_trainer'
@@ -87,16 +91,40 @@ class UserTrainer(UserMixin,db.Model):
     trainer_username = db.Column(db.String(80),db.ForeignKey('user.username'))
     trainer_fname = db.Column(db.String(80),db.ForeignKey('user.username'))
     trainer_lname = db.Column(db.String(80),db.ForeignKey('user.username'))
+    confirmed = db.Column(db.Boolean,nullable = False)
+
+class TrainerReview(UserMixin, db.Model):
+    __tablename__ = 'trainer_review'
+    id = db.Column(db.Integer, primary_key = True)
+    trainee_username = db.Column(db.String(80),db.ForeignKey('user.username'))
+    trainee_fname = db.Column(db.String(80),db.ForeignKey('user.username'))
+    trainee_lname = db.Column(db.String(80),db.ForeignKey('user.username'))
+    trainer_username = db.Column(db.String(80),db.ForeignKey('user.username'))
+    rating = db.Column(db.Integer, nullable = False)
+    comment = db.Column(db.String(180), nullable = True)
+
 
 def partnership_exists(user_uname, trainer_uname):
     return bool(UserTrainer.query.filter_by(trainee_username=user_uname,
                                             trainer_username= trainer_uname).first())
 
 def get_trainers_by_trainee(uname):
-    return UserTrainer.query.filter_by(trainee_username=uname).all()
+    return UserTrainer.query.filter_by(trainee_username=uname, confirmed = True).all()
 
 def get_trainees_by_trainer(uname):
-    return UserTrainer.query.filter_by(trainer_username=uname).all()
+    return UserTrainer.query.filter_by(trainer_username=uname, confirmed = True).all()
+
+def get_request_by_trainer(uname):
+    return UserTrainer.query.filter_by(trainer_username=uname, confirmed = False).all()
+
+def get_user_trainer(id):
+    return UserTrainer.query.filter_by(id=id).first()
+
+def delete_user_trainer(id):
+    UserTrainer.query.filter_by(id=id).delete()
+
+def get_user_trainer_trainee(uname1,uname2):
+    return UserTrainer.query.filter_by(trainee_username = uname1,trainer_username = uname2 ).first()
 
 def user_exits(uname):
     return bool(User.query.filter_by(username=uname).first())
@@ -167,22 +195,31 @@ def get_session_requests_by_trainerid(uname):
     return Sessions.query.filter_by(trainer_username = uname, accepted = False).all()
 
 def get_sessions_by_trainerid(uname):
-    return Sessions.query.filter_by(trainer_username = uname, accepted = True).all()
+    return Sessions.query.filter_by(trainer_username = uname, accepted = True).order_by(Sessions.date).all()
 
 def get_sessions_by_traineeid(uname):
-    return Sessions.query.filter_by(trainee_username = uname, accepted = True).all()
+    return Sessions.query.filter_by(trainee_username = uname, accepted = True).order_by(Sessions.date).all()
 
 def get_session_requests_by_id(id):
     return Sessions.query.filter_by(id = id).first()
 
 def get_upcoming_sessions_by_trainee_id(uname,limit):
-    return Sessions.query.filter_by(trainee_username = uname).limit(limit).all()
+    return Sessions.query.filter_by(trainee_username = uname).order_by(Sessions.date).limit(limit).all()
 
 def get_upcoming_sessions_by_trainer_id(uname,limit):
-    return Sessions.query.filter_by(trainer_username = uname).limit(limit).all()
+    return Sessions.query.filter_by(trainer_username = uname).order_by(Sessions.date).limit(limit).all()
 
-def delete_session_request(id):
+def delete_session(id):
     Sessions.query.filter_by(id = id).delete()
+
+def session_exists(id):
+    return bool(Sessions.query.filter_by(id = id).first())
+
+def get_reviews(uname):
+    return TrainerReview.query.filter_by(trainer_username = uname).all()
+
+def get_amount_reviews(uname):
+    return TrainerReview.query.filter_by(trainer_username = uname).count()
 
 if __name__ == "__main__":
     db.create_all()

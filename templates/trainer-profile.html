@@ -8,9 +8,9 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="../static/main.css" />
         <link rel="stylesheet" href="../static/dropdown.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="../static/js/dropdown.js"></script>
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -45,48 +45,18 @@
         </header>
 
         <main>
-            <form method="post" class="t-options">
-                <div class="trainer-options">
-                    <div class="f-column tgoals">
-                        <label>Filter By Training Goals</label>
-                        <select id="myMulti" name="fitness-goals" size="7" multiple>
-                            <option value="Strength">Strength</option>
-                            <option value="Endurance">Endurance</option>
-                            <option value="Mobility">Mobility</option>
-                            <option value="Combat-Sports">Combat-Sports</option>
-                            <option value="Balance">Balance</option>
-                            <option value="Weight-Loss">Weight-Loss</option>
-                            <option value="weight-Gain">Weight-Gain</option>
-                        </select>
-                    </div>
-                    <div id="mySidebar" class="sidebar">
-                        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                        <a href="/SignUp">Home</a>
-                        <a href="/Friends">Friends</a>
-                        <a href="/chats">Chats</a>
-                        <a href="/TrainingSessions">Sessions</a>
-                        <a href="/logout">Log Out</a>
-                    </div>
-                    
-                    <div class="f-column">
-                        <label for="sortby" style="margin-bottom: 9px;">Sort By:</label>
-                            <select id="sortby" name="sortby" style="color: black; height:50px;">
-                              <option value="none">None</option>
-                              <option value="volvo">Rating</option>
-                              <option value="saab">Amount of reviews</option>
-                              <option value="opel">Date Joined (oldest to newest)</option>
-                              <option value="opel">Date Joined (newest to oldest)</option>
-                            </select>
-                    </div>    
-                </div>
-                <div class="filter-div">
-                    <button type="submit" class="filter" >Apply Filter</button>
-                </div>
-                <hr>
-            </form>
-            <div class="trainer-holder">
-                {% for trainer in trainers %}
-                <div class="trainer-widget" onclick="window.location='/TrainerProfile/{{trainer.username}}'">
+            <div id="mySidebar" class="sidebar">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+                <a href="/SignUp">Home</a>
+                <a href="/Friends">Friends</a>
+                <a href="/chats">Chats</a>
+                <a href="/TrainingSessions">Sessions</a>
+                <a href="/logout">Log Out</a>
+            </div>
+            
+            <div class="friend-body">
+                <br>
+                <div class="trainer-widget">
                     <div class="trainer-image">
                         <img src="../static/images/profile-picture.jpeg" alt="ProfilePicture" class="profile-picture">
                     </div>
@@ -114,10 +84,32 @@
                                 Message
                             </a>
                         </div>
-                        
                     </div>
                 </div>
-                {% endfor %}
+                <div class="widget">
+                    <p class="big">About:</p>
+                    <hr>
+                    <p class="small">{{trainer.about}}</p>
+                </div>
+                <br>
+                <p class="big">Reviews:</p>
+                {% if reviews %}
+                    {%for review in reviews%}
+                        <div class="widget">
+                            <p class="big">{{review.trainee_fname}} {{review.trainee_lname}}</p>
+                            {% for rating in range(0,review.rating) %}
+                                    <span class="fa fa-star checked"></span>
+                            {% endfor %}
+                            <hr>
+                            <p class="small">{{review.comment}}</p>
+                        </div>
+                    {%endfor%}
+                {%else%}
+                    <div class="widget">
+                        <p class="big">No Reviews</p>
+                    </div>
+                {%endif%}
+                <br>
             </div>
             
         </main>

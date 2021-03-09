@@ -63,36 +63,66 @@
                 {% endwith %}
 
                 {%if current_user.isTrainer %}
-                    <div class="dropdown" style="background-color: #0c0c0c;">
-                        <p class="btn btn-primary dropdown-toggle small friend-btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-chevron-down" style="font-size: 15px;"></i>
-                            Session Requests
-                        </p>
-                        <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
-                            {% if requests %}
-                                {% for request in requests %}
-                                    <div class="dropdown-item small" style="padding-bottom: 30px;">
-                                        {{request.trainee_fname}} {{request.trainee_lname}} <br/>
-                                        <p class="smaller">{{request.date}} {{request.time}}</p>
-                                        <div class="session-request">
-                                            <a href="session_accept/{{request.id}}"class="btn btn-primary dropdown-toggle">
-                                                &#10003;
-                                            </a>
-                                            <a href="session_deny/{{request.id}}" class="btn btn-primary dropdown-toggle">
-                                                X
-                                            </a>
+                    <div class="row2">
+                        <div class="dropdown" style="background-color: #0c0c0c; margin-bottom: 20px;">
+                            <p class="btn btn-primary dropdown-toggle small friend-btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-chevron-down" style="font-size: 15px;"></i>
+                                Session Requests
+                            </p>
+                            <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+                                {% if requests %}
+                                    {% for request in requests %}
+                                        <div class="dropdown-item small" style="padding-bottom: 30px;">
+                                            {{request.trainee_fname}} {{request.trainee_lname}} <br/>
+                                            <p class="smaller">{{request.date}} {{request.time}}</p>
+                                            <div class="session-request">
+                                                <a href="session_accept/{{request.id}}"class="btn btn-primary dropdown-toggle">
+                                                    &#10003;
+                                                </a>
+                                                <a href="session_deny/{{request.id}}" class="btn btn-primary dropdown-toggle">
+                                                    X
+                                                </a>
+                                            </div>
                                         </div>
-                                    </div>
-                                {% endfor %}
-                            {% else %}
-                                <p class="small">No new Session requests</p>
-                            {% endif %}
-                                
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="small">No new Session requests</p>
+                                {% endif %}
+                                    
+                            </div>
+                        </div>
+
+                        <div class="dropdown" style="background-color: #0c0c0c;">
+                            <p class="btn btn-primary dropdown-toggle small friend-btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-chevron-down" style="font-size: 15px;"></i>
+                                Client Requests
+                            </p>
+                            <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+                                {% if client_requests %}
+                                    {% for request in client_requests %}
+                                        <div class="dropdown-item small" style="padding-bottom: 30px;">
+                                            {{request.trainee_fname}} {{request.trainee_lname}} <br/>
+                                            <p class="smaller">{{request.date}} {{request.time}}</p>
+                                            <div class="session-request2">
+                                                <a href="/client_accept/{{request.id}}"class="btn btn-primary dropdown-toggle">
+                                                    &#10003;
+                                                </a>
+                                                <a href="/client_deny/{{request.id}}" class="btn btn-primary dropdown-toggle">
+                                                    X
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="small">No new Session requests</p>
+                                {% endif %}
+                                    
+                            </div>
                         </div>
                     </div>
                 {% endif %}
 
-                <div class="widget" style="width: 100%; margin-bottom: 40px; margin-top: 40px;">
+                <div class="widget" style="width: 100%; margin-bottom: 40px; margin-top: 20px;">
                     <div class="big">Upcoming Sessions</div>
                     <hr>
                     <ul class="hs" style="padding-left: 0px;">
@@ -102,7 +132,15 @@
                                     <li class="items home-trainer flex-column">
                                         <p class="small">{{session.trainee_fname}} {{session.trainee_lname}}</p>
                                         <hr>
-                                        <p class="small">{{session.date}} {{session.time}}</p>
+                                        <div class="flex-row">
+                                            <p class="small">{{session.date}} {{session.time}}</p>
+                                            <a href="/Class/{{session.id}}" class="btn btn-primary active btn-right" role="button">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
+                                                    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                                </svg>
+                                                Join Call
+                                            </a>
+                                        </div> 
                                     </li>
                                 {% endfor %}
                             {% else %}
@@ -114,11 +152,16 @@
                                     <li class="items home-trainer flex-column">
                                         <p class="small">{{session.trainer_fname}} {{session.trainer_lname}}</p>
                                         <hr>
-                                        <p class="small">{{session.date}} {{session.time}}</p>
+                                        <div class="flex-row">
+                                            <p class="small">{{session.date}} {{session.time}}</p>
+                                            <a href="/Class/{{session.id}}" class="btn btn-primary active btn-right" role="button">
+                                                Join Call
+                                            </a>
+                                        </div>
                                     </li>
                                 {% endfor %}
                             {% else %}
-                                <p class="small">You have no clients</p>
+                                <p class="small">You have no upcoming sessions</p>
                             {% endif %}
                         {% endif %}
                     </ul>
@@ -146,9 +189,7 @@
                                             </svg>
                                             Message
                                         </a>  
-                                        <a href="/chat/{{trainee.trainee_username}}" class="btn btn-primary active btn-right" role="button">
-                                            Book Session
-                                        </a>   
+                                         
                                         </div> 
                                     </li>
                                 {% endfor %}
@@ -161,15 +202,21 @@
                                     <li class="items home-trainer flex-column">
                                         <p class="small">{{trainer.trainer_fname}} {{trainer.trainer_lname}}</p>
                                         <hr>
-                                        <a href="/chat/{{trainer.trainer_username}}" class="btn btn-primary active btn-right" role="button">
+                                        <div class="flex-row">
+                                        <a href="/chat/{{trainer.trainer_username}}" class="btn btn-primary active t" role="button">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
                                                 <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
                                             </svg>
                                             Message
                                         </a>  
-                                        <a href="/BookSession/{{trainer.trainer_username}}" class="btn btn-primary active btn-right" role="button">
+                                        <a href="/BookSession/{{trainer.trainer_username}}" class="btn btn-primary active" role="button">
                                             Book Session
-                                        </a>    
+                                        </a>
+
+                                        <a href="/Rate/{{trainer.trainer_username}}" class="btn btn-primary active" role="button">
+                                            Rate
+                                        </a> 
+                                        </div>    
                                     </li>
                                 {% endfor %}
                             {% else %}

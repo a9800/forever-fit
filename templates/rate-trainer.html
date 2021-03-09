@@ -26,10 +26,8 @@
                     </div>
                     <ul class="nav navbar-nav laptop">
                         <li><a href="/">Home</a></li>
-                        {% if (not current_user.isTrainer) %}
-                            <li><a href="/TrainerSearch">Trainer Search</a></li>
-                            <li><a href="/Friends">Friends</a></li>                
-                        {% endif %}
+                        <li><a href="/TrainerSearch">Trainer Search</a></li>
+                        <li><a href="/Friends">Friends</a></li>                
                         <li><a href="/chats">Chats</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right laptop">
@@ -53,28 +51,27 @@
             </div> 
             
             <div class="sign-up-sheet">
-                <p class="big">Book a session with {{trainer.fname}}</p>
+                <p class="big">Review {{trainer.fname}}</p>
                 <hr>
                 <form method="post">
                     <br>
                     
-                    <div class="flex-row">
-                        <div>
-                        <p class="small">Choose a date</p>
-                        <input type="date" id="date" name="date" 
-                               class="birthday" max="2100-12-30" required/>
-                        </div>
-
-                        <div>
-                        <p class="small">Time</p>
-                        <input type="time" id="time" name="time">
-                        </div>
+                    <p class="small">Rate Abdelrahman:</p>
+                    <br>
+                    <div class="row3">
+                        <span class="glyphicon glyphicon-thumbs-down"></span></p>
+                        <input name="rating"type="range" min="1" max="5" value="3" class="slider" id="rating" style="width: 80%" required>
+                        <span class="glyphicon glyphicon-thumbs-up"></span></p>
                     </div>
+                    <br>
+                    <br>
+                    <label for="fname" class="small">Comment (max 180 char):</label>
+                    <textarea name="comment" id="comment" rows="4" cols="50" style="width: 100%;" maxlength="180" required></textarea>
                     <br>
                     <br>
                     <br>
                     <div class="center-btn">
-                        <button type="submit" class="signupbtn">Book</button>
+                        <button type="submit" class="signupbtn">Post</button>
                     </div>
                     
                 </form>

@@ -94,7 +94,11 @@
                             <i class='add-friend fas fa-user-plus' onclick="window.location='/addTrainer/{{curr_room.trainer_username}}'">
                             </i>
                         {% else %}
-                            <p class="small">✓ Your Trainer</p>
+                            {% if usertrainer.confirmed %}
+                                <p class="small">✓ Your Trainer</p>
+                            {% else %}
+                                <p class="small">Request Sent</p>
+                            {% endif %}
                         {% endif %}
                     </div>
                     <div id="chat_scroll" class="chat-holder">

@@ -484,6 +484,10 @@ button:hover {
   flex-direction: row;
   margin-bottom: 30px;
 }
+.trainer-widget:hover{
+  background-color: rgb(37, 37, 37);
+  cursor: pointer;
+}
 .trainer-image{
   width:100px;
   margin-right: 10px;
@@ -654,10 +658,16 @@ button:hover {
   .session-request{
     bottom: 50px;
   }
+  .session-request2{
+    bottom: 40px;
+  }
 }
 @media (min-width : 711px){
   .session-request{
     bottom: 60px;
+  }
+  .session-request2{
+    bottom: 40px;
   }
   .tgoals{
     width: 72%;
@@ -874,6 +884,12 @@ background: rgb(78, 78, 78);
   
 }
 
+.session-request2{
+  position: relative;
+  float:right;
+  
+}
+
 .row{
   display: flex;
   flex-direction: row;
@@ -903,6 +919,16 @@ background: rgb(78, 78, 78);
     display: flex;
     flex-direction: column;
   }
+  .participant div:first-child {
+    width: 240px;
+    height: 180px;
+    background-color: #ccc;
+    border: 1px solid black;
+  }
+  .row2{
+    flex-direction: column;
+    justify-content: center;
+  }
 }
 
 @media (min-width : 900px){
@@ -917,6 +943,19 @@ background: rgb(78, 78, 78);
   .flex-container {
     display: flex;
     flex-direction: column;
+  }
+  .participant div:first-child {
+    width: 480px;
+    height: 360px;
+    background-color: #ccc;
+    border: 1px solid black;
+  }
+  .participant video {
+    width: 100%;
+    height: 100%;
+  }
+  .row2{
+    flex-direction: row;
   }
 }
 
@@ -936,4 +975,116 @@ background: rgb(78, 78, 78);
     display: flex;
     flex-direction: row;
   }
+  .participant div:first-child {
+    width: 480px;
+    height: 360px;
+    background-color: #ccc;
+    border: 1px solid black;
+  }
+
+  .row2{
+    flex-direction: row;
+  }
+}
+
+.container2 {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.participant {
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+.participant div {
+  text-align: center;
+}
+
+.participant div:first-child {
+  border-radius: 10px;
+  background-color: var(--black);
+
+}
+.participant video {
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+progress{
+  width: 70%;
+  height: 30px;
+}
+
+.row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.row2{
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.row3{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;
+  background: var(--lightgrey);
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: var(--blue);
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: var(--darkblue);
+  cursor: pointer;
+}
+
+.glyphicon-thumbs-up,
+.glyphicon-thumbs-down{
+  font-size: 20px;
+  color: var(--blue);
+}
+
+textarea{
+  color: var(--black);
+  font-size: 17px;
+  font-weight: 350;
+}
+
+.checked {
+  color: orange;
 }

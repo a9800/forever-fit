@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Book Session</title>
+        <title>Sessions</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="theme-color" content="#7952b3" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="../static/main.css" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet" />
-        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="../static/main.css" />
 
     </head>
 
@@ -28,9 +28,10 @@
                         <li><a href="/">Home</a></li>
                         {% if (not current_user.isTrainer) %}
                             <li><a href="/TrainerSearch">Trainer Search</a></li>
-                            <li><a href="/Friends">Friends</a></li>                
+                            <li><a href="/Friends">Friends</a></li>             
                         {% endif %}
                         <li><a href="/chats">Chats</a></li>
+                        <li><a href="/TrainingSessions">Sessions</a></li> 
                     </ul>
                     <ul class="nav navbar-nav navbar-right laptop">
                         <li>
@@ -46,39 +47,30 @@
             <div id="mySidebar" class="sidebar">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
                 <a href="/SignUp">Home</a>
-                <a href="#">Trainer Search</a>
-                <a href="/Friends">Friends</a>
+                {% if (not current_user.isTrainer) %}
+                        <a href="/TrainerSearch">Trainer Search</a>
+                        <a href="/Friends">Friends</a>           
+                {% endif %}
                 <a href="/chats">Chats</a>
+                <a href="/TrainingSessions">Sessions</a>
                 <a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
             </div> 
-            
-            <div class="sign-up-sheet">
-                <p class="big">Book a session with {{trainer.fname}}</p>
-                <hr>
-                <form method="post">
-                    <br>
-                    
-                    <div class="flex-row">
-                        <div>
-                        <p class="small">Choose a date</p>
-                        <input type="date" id="date" name="date" 
-                               class="birthday" max="2100-12-30" required/>
-                        </div>
+            <div class="friend-body">
+                <p id="count"></p>
+                <div id="container" class="container2">
+                    <div id="local" class="participant"><div></div><div>Me</div></div>
+                    <!-- more participants will be added dynamically here -->
+                </div>
 
-                        <div>
-                        <p class="small">Time</p>
-                        <input type="time" id="time" name="time">
-                        </div>
-                    </div>
-                    <br>
-                    <br>
-                    <br>
-                    <div class="center-btn">
-                        <button type="submit" class="signupbtn">Book</button>
-                    </div>
-                    
+                <form>
+                    <input name="room_id" id="room_id" value="{{room_id}}" style="display: none;">
+                    <input type="text" name=”username” id="username" value="{{user.username}}" style="display: none;">
+                    <button id="join_leave">Join call</button>
                 </form>
             </div>
+    
+            <script src="//media.twiliocdn.com/sdk/js/video/releases/2.3.0/twilio-video.min.js"></script>
+            <script src="/static/js/video_chat.js"></script>
         </main>
         <script>
             function openNav() {
@@ -90,22 +82,6 @@
                 document.getElementById("mySidebar").style.width = "0";
                 document.getElementById("main").style.marginLeft = "0";
             }
-
-            var today = new Date();
-            var dd = today.getDate();
-            var mm = today.getMonth()+1; //January is 0!
-            var yyyy = today.getFullYear();
-            if(dd<10){
-                dd='0'+dd
-            } 
-            if(mm<10){
-                mm='0'+mm
-            } 
-            
-            
-            today = yyyy+'-'+mm+'-'+dd;
-            console.log(today)
-            document.getElementById("date").setAttribute("min", today);
         </script>
     </body>
 </html>

@@ -1,11 +1,24 @@
-from flask import Flask, flash, request, render_template, redirect
+import os
+from flask import Flask, flash, request, render_template, redirect, abort
 from flask_login import current_user, login_user, login_required, logout_user
 from form import *
 from sql_db import *
 from main import app, login, socketio
 from flask_socketio import send, join_room, leave_room
 from time import localtime, strftime
+from dotenv import load_dotenv
+from twilio.jwt.access_token import AccessToken
+from twilio.jwt.access_token.grants import VideoGrant
+from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
+
 # pip3 install flask-socketio==4.3.2
+# pip3 install twilio flask python-dotenv
+
+load_dotenv()
+twilio_account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
+twilio_api_key_sid = os.environ.get('TWILIO_API_KEY_SID')
+twilio_api_key_secret = os.environ.get('TWILIO_API_KEY_SECRET')
 
 @app.route("/")
 def home():
@@ -43,7 +56,7 @@ def SignUpTrainee():
 
             register = User(username = form['username'], fname = form['fname'],
                             lname = form['lname'], dob = form['birthday'], isTrainer = False,
-                            fitnessGoals = form['goals'])
+                            fitnessGoals = form['goals'], sessionsCompleted = 0)
                             
             register.set_password(form['psw'])
             db.session.add(register)
@@ -74,7 +87,7 @@ def SignUpTrainer():
             #print(goals)
             register = User(username = form['username'], fname = form['fname'],
                             lname = form['lname'], dob = form['birthday'], isTrainer = True,
-                            fitnessGoals = form['goals'])
+                            fitnessGoals = form['goals'],  sessionsCompleted = 0, rating = 0, about=form['about'])
 
             register.set_password(form['psw'])
             db.session.add(register)
@@ -103,16 +116,23 @@ def Home():
         friends = limit_get_friends(current_user.username,5)
         recent_rooms = get_limit_rooms_by_trainee_id(current_user.username,2)
         upcoming_sessions = get_upcoming_sessions_by_trainee_id(current_user.username,2)
-        return render_template('home.html',recent_rooms=recent_rooms,friends=friends,upcoming_sessions=upcoming_sessions)
+        return render_template('home.html',recent_rooms=recent_rooms,friends=friends,upcoming_sessions=upcoming_sessions,
+                                current_user = current_user)
     else:
         recent_rooms = get_limit_rooms_by_trainer_id(current_user.username,2)
         upcoming_sessions = get_upcoming_sessions_by_trainer_id(current_user.username,2)
-        return render_template('trainer-home.html',recent_rooms=recent_rooms, upcoming_sessions=upcoming_sessions)
+        return render_template('trainer-home.html',recent_rooms=recent_rooms, upcoming_sessions=upcoming_sessions,
+                                current_user = current_user)
 
 @app.route('/TrainerSearch')
 @login_required
 def TrainerSearch():
     return render_template('trainer-search.html', trainers = get_trainers())
+
+@app.route('/TrainerProfile/<uname>')
+@login_required
+def TrainerProfile(uname):
+    return render_template('trainer-profile.html', trainer = get_user(uname),reviews = get_reviews(uname))
 
 @app.route('/logout')
 @login_required
@@ -137,8 +157,6 @@ def chats():
                                 curr_fname = current_user.fname, curr_lname = current_user.lname, 
                                 rooms=ROOMS)
 
-
-
 @app.route('/chat/<uname>')
 @login_required
 def sessions(uname):
@@ -162,10 +180,12 @@ def sessions(uname):
 
         partnership = partnership_exists(current_user.username,uname)
 
+        usertrainer = get_user_trainer_trainee(current_user.username, uname)
+
         return render_template('session.html',uname = uname, curr_uname = current_user.username,
                                 curr_fname = current_user.fname, curr_lname = current_user.lname, 
                                 rooms=ROOMS, messages = messages, curr_room = curr_room,
-                                partnership=partnership)
+                                partnership=partnership,usertrainer=usertrainer)
     else:
         if(room_exists(uname, current_user.username)):
             ROOMS = get_rooms_by_trainer_id(current_user.username)
@@ -204,13 +224,29 @@ def training_sessions():
     if current_user.isTrainer:
         trainers = get_trainees_by_trainer(current_user.username)
         requests = get_session_requests_by_trainerid(current_user.username)
+        client_requests = get_request_by_trainer(current_user.username)
         sessions = get_sessions_by_trainerid(current_user.username)
         return render_template('training-sessions.html', current_user = current_user, trainers = trainers, requests = requests,
-                                sessions = sessions)
+                                sessions = sessions,client_requests=client_requests)
     else:
         trainers = get_trainers_by_trainee(current_user.username)
         sessions = get_sessions_by_traineeid(current_user.username)
         return render_template('training-sessions.html', current_user = current_user, trainers = trainers, sessions = sessions)
+
+@app.route('/client_accept/<id>')
+@login_required
+def client_accept(id):
+    user_trainer = get_user_trainer(id)
+    user_trainer.confirmed = True
+    db.session.commit()
+    return redirect('/TrainingSessions')
+
+@app.route('/client_deny/<id>')
+@login_required
+def client_deny(id):
+    delete_user_trainer(id)
+    db.session.commit()
+    return redirect('/TrainingSessions')
 
 @app.route('/BookSession/<uname>',methods=['POST','GET'])
 @login_required
@@ -240,6 +276,46 @@ def book_session(uname):
         flash('You have sent '+get_user(uname).fname+' a session request')
         return redirect('/TrainingSessions')
 
+@app.route('/Rate/<uname>',methods=['POST','GET'])
+@login_required
+def rate_trainer(uname):
+    if request.method == 'GET':
+        if partnership_exists(current_user.username,uname):
+            return render_template('/rate-trainer.html', trainer = get_user(uname))
+        else:
+            return redirect('/TrainingSessions')
+    
+    if request.method == 'POST':
+        
+        form = request.form
+
+        update_rating(uname,int(form['rating']))
+
+        trainer_review = TrainerReview(
+            trainee_username = current_user.username,
+            trainee_fname = current_user.fname,
+            trainee_lname = current_user.lname,
+            trainer_username = uname,
+            rating = int(form['rating']),
+            comment = form['comment']
+        )
+        
+        db.session.add(trainer_review)
+        db.session.commit()
+        flash('You have successfully reviewed '+get_user(uname).fname)
+        return redirect('/TrainingSessions')
+
+def update_rating(uname,rating):
+    curr_rating = get_user(uname).rating
+    amount_reviews = get_amount_reviews(uname)
+    print("\n\n\n",amount_reviews,"\n\n\n")
+    x = curr_rating * amount_reviews
+    print("\n\n\n",type(rating),"\n\n\n")
+    print("\n\n\n",type(x),"\n\n\n")
+    x = x + rating
+    new_rating = round(x / (amount_reviews + 1),2)
+    get_user(uname).rating = new_rating
+
 @app.route('/session_accept/<id>')
 @login_required
 def session_accept(id):
@@ -251,7 +327,8 @@ def session_accept(id):
 @app.route('/session_deny/<id>')
 @login_required
 def session_deny(id):
-    delete_session_request(id)
+    delete_session(id)
+    db.session.commit()
     return redirect('/TrainingSessions')
     
 @socketio.on('join')
@@ -338,7 +415,7 @@ def friend_accept(uname):
 def friend_deny(uname):
     if friend_request_exists(uname,current_user.username):
         delete_friend_request(uname,current_user.username)
-
+        db.session.commit()
         return redirect('/Friends')
     else:
         return redirect('/Friends')
@@ -355,7 +432,41 @@ def addTrainer(trainer_username):
                                        trainee_lname = current_user.lname,
                                        trainer_username = trainer_username,
                                        trainer_fname = get_user(trainer_username).fname,
-                                       trainer_lname = get_user(trainer_username).lname)
+                                       trainer_lname = get_user(trainer_username).lname,
+                                       confirmed = False)
             db.session.add(user_trainer)
             db.session.commit()
             return redirect('/chat/'+trainer_username)
+
+@app.route('/Class/<room_id>')
+@login_required
+def Class(room_id):
+    return render_template('class.html',user = current_user,room_id = room_id)
+
+@app.route('/JoinCall',methods = ['POST'])
+@login_required
+def JoinCall():
+    if request.method == 'POST':
+
+        username = current_user.username
+        room = request.get_json(force=True).get('room')
+
+        if not username:
+            abort(401)
+
+        token = AccessToken(twilio_account_sid, twilio_api_key_sid,
+                            twilio_api_key_secret, identity=username)
+
+        token.add_grant(VideoGrant(room=room))
+
+        return {'token': token.to_jwt().decode()}
+
+@app.route('/EndCall/<session_id>')
+@login_required
+def EndCall(session_id):
+    if session_exists(session_id):
+        delete_session(session_id)
+        
+    current_user.sessionsCompleted = current_user.sessionsCompleted + 1
+    db.session.commit()
+    return redirect('/Home')
