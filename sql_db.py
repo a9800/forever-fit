@@ -14,6 +14,14 @@ class User(UserMixin,db.Model):
     password = db.Column(db.String(120), nullable=False)
     isTrainer = db.Column(db.Boolean, nullable = False)
     fitnessGoals = db.Column(db.String(120), nullable=True)
+    strength = db.Column(db.Boolean, nullable=True)
+    endurance = db.Column(db.Boolean, nullable=True)
+    mobility = db.Column(db.Boolean, nullable=True)
+    combat_sports = db.Column(db.Boolean, nullable=True)
+    balance = db.Column(db.Boolean, nullable=True)
+    weightloss = db.Column(db.Boolean, nullable=True)
+    weightgain = db.Column(db.Boolean, nullable=True)
+
     sessionsCompleted = db.Column(db.Integer, nullable=False)
     rating = db.Column(db.Integer, nullable=True)
     about = db.Column(db.String(120), nullable=True)
@@ -133,8 +141,17 @@ def get_user(uname):
     return User.query.filter_by(username=uname).first()
 
 def get_trainers():
-    print(User.query.filter_by(isTrainer = True).all())
     return User.query.filter_by(isTrainer = True).all()
+
+def get_clients():
+    return User.query.filter_by(isTrainer = False).all()
+
+def filter_get_trainers(filters):
+    query = User.query.filter_by(isTrainer = True)
+    trainer_types = ['Stength', 'Endurance','Mobility','Combat-Sports','Balance','Weight-Loss','Weight-Gain']
+    if 'Strength' in filter:
+        query.filter_by(strength = True)
+    return query.all()
 
 def room_exists(trainee_uname,trainer_uname):
     return (room_exists_helper(trainee_uname,trainer_uname) or room_exists_helper(trainer_uname,trainee_uname))
@@ -217,6 +234,12 @@ def session_exists(id):
 
 def get_reviews(uname):
     return TrainerReview.query.filter_by(trainer_username = uname).all()
+
+def user_has_highly_rated(uname):
+    return bool(TrainerReview.query.filter(TrainerReview.trainee_username == uname,TrainerReview.rating>4).first())
+
+def get_highest_rated_trainer_by_client(uname):
+    return TrainerReview.query.filter_by(trainee_username = uname).order_by(TrainerReview.rating).first()
 
 def get_amount_reviews(uname):
     return TrainerReview.query.filter_by(trainer_username = uname).count()

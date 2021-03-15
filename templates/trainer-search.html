@@ -80,10 +80,53 @@
                     </div>    
                 </div>
                 <div class="filter-div">
-                    <button type="submit" class="filter" >Apply Filter</button>
+                    <a class="filter" onclick="trainerSearch()">Apply Filter</a>
                 </div>
                 <hr>
+                <input id="goals" type="goals" name="goals" style="display: none;"/>
             </form>
+            {% if recommendations %}
+            
+                <div class="trainer-holder">
+                    <p class="small">Here are some recommendations based on your previous Ratings</p>
+                    <hr style="width: 100%;">
+                    {% for trainer in recommendations %}
+                    <div class="trainer-widget" onclick="window.location='/TrainerProfile/{{trainer.username}}'">
+                        <div class="trainer-image">
+                            <img src="../static/images/profile-picture.jpeg" alt="ProfilePicture" class="profile-picture">
+                        </div>
+                        <div class="flex-column">
+                            <div class = "trainer-info">
+                                <div class="trainer-name big">
+                                    <p>{{ trainer.fname }} {{ trainer.lname }}</p>
+                                </div>
+                                <hr style="width: 100%; margin-top: 5px; margin-bottom:5px" class="highlighted">
+                                <div class="small trainer-details">
+                                    <p>DOB: {{ trainer.dob }}</p>
+                                    <p>Training Areas: {{ trainer.fitnessGoals }}</p>
+                                    <p>Rating: 
+                                        {% for rating in range(0,trainer.rating) %}
+                                            <span class="fa fa-star checked"></span>
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="message-button">
+                                <a href="/chat/{{trainer.username}}" class="btn btn-primary active mbtn" role="button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
+                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                    </svg>
+                                    Message
+                                </a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <hr style="width: 100%;">
+                </div>
+
+            {% endif %}
             <div class="trainer-holder">
                 {% for trainer in trainers %}
                 <div class="trainer-widget" onclick="window.location='/TrainerProfile/{{trainer.username}}'">
@@ -131,9 +174,49 @@
                 document.getElementById("mySidebar").style.width = "0";
                 document.getElementById("main").style.marginLeft = "0";
             }
+            
             var myDrop = new drop({
                 selector: "#myMulti",
             });
+
+            var fitnessGoals = new Array();
+
+            function addGoal(elmnt){
+                fitnessGoals.push(elmnt.innerText);
+                fitnessGoals.sort();
+                console.log(fitnessGoals);
+            }
+
+            function removeGoal(elmnt){
+                console.log((elmnt.innerText.slice(0, -2)));
+                for (i = 0; i < fitnessGoals.length; i++){
+                    if(fitnessGoals[i]===elmnt.innerText.slice(0, -2)){
+                        delete fitnessGoals[i]
+                    }
+                }
+                fitnessGoals = fitnessGoals.filter(value => Object.keys(value).length !== 0);
+                console.log(fitnessGoals);
+                
+            }
+
+            setInterval(function(){
+                document.getElementById('goals').value=fitnessGoals.toString();
+                console.log(fitnessGoals.toString());
+            },
+            500);
+
+            function trainerSearch() {
+                if (fitnessGoals.length == 0) {
+                    window.location='/TrainerSearch/filter=None&sort=None';
+                    
+                } else {
+                    var location = '/TrainerSearch/filter=';
+                    var filter = fitnessGoals.toString();
+                    var sort = '&sort=None'
+                    window.location = location.concat(filter,sort);
+                }
+            }
+            
         </script>
     </body>
 </html>

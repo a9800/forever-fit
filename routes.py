@@ -11,6 +11,9 @@ from twilio.jwt.access_token import AccessToken
 from twilio.jwt.access_token.grants import VideoGrant
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
+from content_based_recommender import *
+import pandas as pd
+from csv import writer
 
 # pip3 install flask-socketio==4.3.2
 # pip3 install twilio flask python-dotenv
@@ -54,13 +57,37 @@ def SignUpTrainee():
             # Removing empty elemets and sorting it alphabetically
             goals = sorted([i for i in goals if i])
 
-            register = User(username = form['username'], fname = form['fname'],
-                            lname = form['lname'], dob = form['birthday'], isTrainer = False,
-                            fitnessGoals = form['goals'], sessionsCompleted = 0)
+            register = User(username = form['username'],
+                            fname = form['fname'],
+                            lname = form['lname'], 
+                            dob = form['birthday'], 
+                            isTrainer = False,
+                            fitnessGoals = form['goals'], 
+                            strength='Strength' in goals,
+                            endurance = 'Endurance' in goals,
+                            mobility = 'Mobility' in goals,
+                            combat_sports = 'Combat-Sports' in goals,
+                            balance = 'Balance' in goals,
+                            weightloss = 'Weight-Loss' in goals,
+                            weightgain = 'Weight-Gain' in goals,
+                            sessionsCompleted = 0)
                             
             register.set_password(form['psw'])
             db.session.add(register)
             db.session.commit()
+
+            # Add info to csv to make recommendations
+            row_contents = [form['username'],
+                            form['birthday'],
+                            'Strength' in goals,
+                            'Endurance' in goals,
+                            'Mobility' in goals,
+                            'Combat-Sports' in goals,
+                            'Balance' in goals,
+                            'Weight-Loss' in goals,
+                            'Weight-Gain' in goals]
+
+            append_list_as_row('clients.csv', row_contents)    
             return redirect('Login')
         
 @app.route('/SignUpTrainer',methods = ['POST', 'GET'])
@@ -85,14 +112,49 @@ def SignUpTrainer():
             goals = sorted([i for i in goals if i])
 
             #print(goals)
-            register = User(username = form['username'], fname = form['fname'],
-                            lname = form['lname'], dob = form['birthday'], isTrainer = True,
-                            fitnessGoals = form['goals'],  sessionsCompleted = 0, rating = 0, about=form['about'])
+            register = User(username = form['username'], 
+                            fname = form['fname'],
+                            lname = form['lname'], 
+                            dob = form['birthday'], 
+                            isTrainer = True,
+                            fitnessGoals = form['goals'], 
+                            strength='Strength' in goals,
+                            endurance = 'Endurance' in goals,
+                            mobility = 'Mobility' in goals,
+                            combat_sports = 'Combat-Sports' in goals,
+                            balance = 'Balance' in goals,
+                            weightloss = 'Weight-Loss' in goals,
+                            weightgain = 'Weight-Gain' in goals, 
+                            sessionsCompleted = 0, 
+                            rating = 0, 
+                            about = form['about'])
 
             register.set_password(form['psw'])
             db.session.add(register)
             db.session.commit()
+
+            # Add info to csv to make recommendations
+            row_contents = [form['username'],
+                            form['birthday'],
+                            'Strength' in goals,
+                            'Endurance' in goals,
+                            'Mobility' in goals,
+                            'Combat-Sports' in goals,
+                            'Balance' in goals,
+                            'Weight-Loss' in goals,
+                            'Weight-Gain' in goals,
+                            form['about']]
+            
+            append_list_as_row('trainers.csv', row_contents)
             return redirect('Login')
+
+def append_list_as_row(file_name, list_of_elem):
+    # Open file in append mode
+    with open(file_name, 'a+', newline='') as write_obj:
+        # Create a writer object from csv module
+        csv_writer = writer(write_obj)
+        # Add contents of list as last row in the csv file
+        csv_writer.writerow(list_of_elem)
 
 @app.route('/Login',methods = ['POST','GET'])
 def Login():
@@ -116,18 +178,43 @@ def Home():
         friends = limit_get_friends(current_user.username,5)
         recent_rooms = get_limit_rooms_by_trainee_id(current_user.username,2)
         upcoming_sessions = get_upcoming_sessions_by_trainee_id(current_user.username,2)
+
         return render_template('home.html',recent_rooms=recent_rooms,friends=friends,upcoming_sessions=upcoming_sessions,
                                 current_user = current_user)
     else:
         recent_rooms = get_limit_rooms_by_trainer_id(current_user.username,2)
         upcoming_sessions = get_upcoming_sessions_by_trainer_id(current_user.username,2)
+        
         return render_template('trainer-home.html',recent_rooms=recent_rooms, upcoming_sessions=upcoming_sessions,
                                 current_user = current_user)
 
-@app.route('/TrainerSearch')
+@app.route('/TrainerSearch/<filter>&<sort>', methods=['POST','GET'])
 @login_required
-def TrainerSearch():
-    return render_template('trainer-search.html', trainers = get_trainers())
+def TrainerSearch(filter,sort):
+    if current_user.isTrainer:
+        return redirect('/Home')
+    
+    else:
+        # Content-Based Recommendations
+        # Checking if the user has rated a trainer highly before to make a content-based recommendation
+        if user_has_highly_rated(current_user.username):
+            liked_trainer = get_highest_rated_trainer_by_client(current_user.username)
+            
+            recommended_usernames = content_based_recommendation(liked_trainer.trainer_username)
+
+            recommendations = []
+            for username in recommended_usernames:
+                recommendations.append(get_user(username))
+
+            return render_template('trainer-search.html', trainers = get_trainers(), recommendations = recommendations)
+    
+        return render_template('trainer-search.html', trainers = get_trainers())
+        
+        #if filter=="filter=None" and sort=='sort=None':
+        #    return render_template('trainer-search.html', trainers = get_trainers())
+        #
+        #else:
+        #    return render_template('trainer-search.html', trainers = filter_get_trainers(filter), filter=filter)
 
 @app.route('/TrainerProfile/<uname>')
 @login_required
@@ -226,6 +313,7 @@ def training_sessions():
         requests = get_session_requests_by_trainerid(current_user.username)
         client_requests = get_request_by_trainer(current_user.username)
         sessions = get_sessions_by_trainerid(current_user.username)
+
         return render_template('training-sessions.html', current_user = current_user, trainers = trainers, requests = requests,
                                 sessions = sessions,client_requests=client_requests)
     else:
@@ -239,6 +327,7 @@ def client_accept(id):
     user_trainer = get_user_trainer(id)
     user_trainer.confirmed = True
     db.session.commit()
+
     return redirect('/TrainingSessions')
 
 @app.route('/client_deny/<id>')
@@ -246,6 +335,7 @@ def client_accept(id):
 def client_deny(id):
     delete_user_trainer(id)
     db.session.commit()
+
     return redirect('/TrainingSessions')
 
 @app.route('/BookSession/<uname>',methods=['POST','GET'])
@@ -273,6 +363,7 @@ def book_session(uname):
         )
         db.session.add(session)
         db.session.commit()
+
         flash('You have sent '+get_user(uname).fname+' a session request')
         return redirect('/TrainingSessions')
 
@@ -302,18 +393,18 @@ def rate_trainer(uname):
         
         db.session.add(trainer_review)
         db.session.commit()
+
         flash('You have successfully reviewed '+get_user(uname).fname)
         return redirect('/TrainingSessions')
 
 def update_rating(uname,rating):
     curr_rating = get_user(uname).rating
     amount_reviews = get_amount_reviews(uname)
-    print("\n\n\n",amount_reviews,"\n\n\n")
+
     x = curr_rating * amount_reviews
-    print("\n\n\n",type(rating),"\n\n\n")
-    print("\n\n\n",type(x),"\n\n\n")
     x = x + rating
     new_rating = round(x / (amount_reviews + 1),2)
+
     get_user(uname).rating = new_rating
 
 @app.route('/session_accept/<id>')
@@ -329,6 +420,7 @@ def session_accept(id):
 def session_deny(id):
     delete_session(id)
     db.session.commit()
+
     return redirect('/TrainingSessions')
     
 @socketio.on('join')

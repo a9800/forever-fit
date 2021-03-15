@@ -1088,3 +1088,7 @@ textarea{
 .checked {
   color: orange;
 }
+
+.highlighted {
+  border: 1px solid var(--blue);
+}

@@ -27,7 +27,7 @@
                     <ul class="nav navbar-nav laptop">
                         <li><a href="/">Home</a></li>
                         {% if (not current_user.isTrainer) %}
-                            <li><a href="/TrainerSearch">Trainer Search</a></li>
+                            <li><a href="/TrainerSearch/filter=None&sort=None">Trainer Search</a></li>
                             <li><a href="/Friends">Friends</a></li>                
                         {% endif %}
                         <li><a href="/chats">Chats</a></li>
@@ -46,7 +46,7 @@
             <div id="mySidebar" class="sidebar">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
                 <a href="/SignUp">Home</a>
-                <a href="#">Trainer Search</a>
+                <a href="/TrainerSearch/filter=None&sort=None">Trainer Search</a>
                 <a href="/Friends">Friends</a>
                 <a href="/chats">Chats</a>
                 <a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
