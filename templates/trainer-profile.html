@@ -86,7 +86,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="widget">
+                <div class="widget" style="width: 100%;">
                     <p class="big">About:</p>
                     <hr>
                     <p class="small">{{trainer.about}}</p>
@@ -95,7 +95,7 @@
                 <p class="big">Reviews:</p>
                 {% if reviews %}
                     {%for review in reviews%}
-                        <div class="widget">
+                        <div class="widget" style="width: 100%;">
                             <p class="big">{{review.trainee_fname}} {{review.trainee_lname}}</p>
                             {% for rating in range(0,review.rating) %}
                                     <span class="fa fa-star checked"></span>
@@ -105,7 +105,7 @@
                         </div>
                     {%endfor%}
                 {%else%}
-                    <div class="widget">
+                    <div class="widget" style="width: 100%;">
                         <p class="big">No Reviews</p>
                     </div>
                 {%endif%}
