@@ -32,4 +32,4 @@ if __name__ == "__main__":
     SECRET_KEY = os.urandom(32)
     app.config['SECRET_KEY'] = SECRET_KEY
     
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=True, cors_allowed_origins=["https://theforever.fit"])
