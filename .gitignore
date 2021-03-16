@@ -1,2 +1,4 @@
 forever-fit.db
 *.csv
+__pycache__/
+.env
