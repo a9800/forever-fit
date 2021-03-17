@@ -10,6 +10,7 @@ from werkzeug import debug
 app = Flask(__name__)
 login = LoginManager()
 
+white = ["https://fontawesome.com"]
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///forever-fit.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -26,16 +27,18 @@ if __name__ == "__main__":
     @app.before_first_request
     def create_table():
         db.create_all()
-
-    from flask import request
     
     @app.after_request
-    def after_request(response):
-        white_origin= ["https://kit.fontawesome.com"]
-        if request.headers['Origin'] in white_origin:
-            response.headers['Access-Control-Allow-Origin'] = request.headers['Origin'] 
-            response.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
-            response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    def add_cors_headers(response):
+        r = request.referrer[:-1]
+        if r in white:
+            response.headers.add('Access-Control-Allow-Origin', r)
+            response.headers.add('Access-Control-Allow-Credentials', 'true')
+            response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+            response.headers.add('Access-Control-Allow-Headers', 'Cache-Control')
+            response.headers.add('Access-Control-Allow-Headers', 'X-Requested-With')
+            response.headers.add('Access-Control-Allow-Headers', 'Authorization')
+            response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
         return response
 
     @login.user_loader
