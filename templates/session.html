@@ -91,7 +91,7 @@
                         <img src="../static/images/profile-picture.jpeg" alt="ProfilePicture" class="profile-picture">
                         {{curr_room.trainer_fname}} {{curr_room.trainer_lname}}
                         {% if not partnership %}
-                            <i class='add-friend fas fa-user-plus' onclick="window.location='/addTrainer/{{curr_room.trainer_username}}'">
+                            <i class='add-friend fa fa-user-plus' onclick="window.location='/addTrainer/{{curr_room.trainer_username}}'">
                             </i>
                         {% else %}
                             {% if usertrainer.confirmed %}
