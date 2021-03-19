@@ -359,7 +359,7 @@ def book_session(uname):
                     date = form['date'],
                     time = form['time'],
                     completed = False,
-                    accepted = False
+                    accepted = True
         )
         db.session.add(session)
         db.session.commit()
@@ -525,7 +525,7 @@ def addTrainer(trainer_username):
                                        trainer_username = trainer_username,
                                        trainer_fname = get_user(trainer_username).fname,
                                        trainer_lname = get_user(trainer_username).lname,
-                                       confirmed = False)
+                                       confirmed = True)
             db.session.add(user_trainer)
             db.session.commit()
             return redirect('/chat/'+trainer_username)
