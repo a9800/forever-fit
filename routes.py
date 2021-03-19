@@ -415,7 +415,7 @@ def update_rating(uname,rating):
 
     x = curr_rating * amount_reviews
     x = x + rating
-    new_rating = round(x / (amount_reviews + 1),2)
+    new_rating = int(x / (amount_reviews + 1))
 
     get_user(uname).rating = new_rating
 
