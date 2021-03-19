@@ -88,7 +88,13 @@ def SignUpTrainee():
                             'Weight-Gain' in goals]
 
             append_list_as_row('clients.csv', row_contents)    
-            return redirect('Login')
+            
+            username = form['username']
+            user = User.query.filter_by(username = username).first()
+        
+            if user is not None and user.check_password(form['psw']):
+                login_user(user)
+                return redirect('Home')
         
 @app.route('/SignUpTrainer',methods = ['POST', 'GET'])
 def SignUpTrainer():
@@ -146,7 +152,13 @@ def SignUpTrainer():
                             form['about']]
             
             append_list_as_row('trainers.csv', row_contents)
-            return redirect('Login')
+            
+            username = form['username']
+            user = User.query.filter_by(username = username).first()
+        
+            if user is not None and user.check_password(form['psw']):
+                login_user(user)
+                return redirect('Home')
 
 def append_list_as_row(file_name, list_of_elem):
     # Open file in append mode
@@ -359,7 +371,7 @@ def book_session(uname):
                     date = form['date'],
                     time = form['time'],
                     completed = False,
-                    accepted = True
+                    accepted = True #### CHANGE THIS TO FLASE
         )
         db.session.add(session)
         db.session.commit()
@@ -525,7 +537,7 @@ def addTrainer(trainer_username):
                                        trainer_username = trainer_username,
                                        trainer_fname = get_user(trainer_username).fname,
                                        trainer_lname = get_user(trainer_username).lname,
-                                       confirmed = True)
+                                       confirmed = True) ### CHANGE TO FALSE
             db.session.add(user_trainer)
             db.session.commit()
             return redirect('/chat/'+trainer_username)
