@@ -95,7 +95,7 @@
                 <p class="big">Reviews:</p>
                 {% if reviews %}
                     {%for review in reviews%}
-                        <div class="widget" style="width: 100%;">
+                        <div class="widget" style="width: 100%; margin-bottom: 10px;">
                             <p class="big">{{review.trainee_fname}} {{review.trainee_lname}}</p>
                             {% for rating in range(0,review.rating) %}
                                     <span class="fa fa-star checked"></span>
