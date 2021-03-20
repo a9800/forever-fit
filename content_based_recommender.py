@@ -18,7 +18,7 @@ def content_based_recommendation(liked_trainer):
     def get_features(data):
         features=[]
         for i in range(0,data.shape[0]):
-            features.append(data['Username'][i]+' '+data['Birthday'][i]+' '+str(data['Strength'][i])+' '+str(data['Endurance'][i])+' '+str(data['Mobility'][i])+' '+str(data['Combat-Sports'][i])+' '+str(data['Balance'][i])+' '+str(data['Weight-Loss'][i])+' '+str(data['Weight-Gain'][i]))
+            features.append(data['Username'][i]+' '+data['Birthday'][i]+' '+str(data['Strength'][i])+' '+str(data['Endurance'][i])+' '+str(data['Mobility'][i])+' '+str(data['Combat-Sports'][i])+' '+str(data['Balance'][i])+' '+str(data['Weight-Loss'][i])+' '+str(data['Weight-Gain'][i])+' '+data['About'][i])
         
         return features
     
@@ -49,7 +49,7 @@ def content_based_recommendation(liked_trainer):
     sorted_scores = sorted(scores, key = lambda x:x[1], reverse = True)
     sorted_scores = sorted_scores[1:]
     
-    print(sorted_scores)
+    #print(sorted_scores)
     recommended_trainers = []
 
     # return the top 3 trainers with a high recommendation

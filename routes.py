@@ -12,8 +12,12 @@ from twilio.jwt.access_token.grants import VideoGrant
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
 from content_based_recommender import *
+from collaborative_recommender_system import *
+from client_similarity import *
 import pandas as pd
 from csv import writer
+import datetime;
+import random
 
 # pip3 install flask-socketio==4.3.2
 # pip3 install twilio flask python-dotenv
@@ -207,18 +211,33 @@ def TrainerSearch(filter,sort):
         return redirect('/Home')
     
     else:
-        # Content-Based Recommendations
-        # Checking if the user has rated a trainer highly before to make a content-based recommendation
-        if user_has_highly_rated(current_user.username):
-            liked_trainer = get_highest_rated_trainer_by_client(current_user.username)
-            
-            recommended_usernames = content_based_recommendation(liked_trainer.trainer_username)
+        # Collaborative Recommendations
+        similar_clients = get_similair_clients(current_user.username)
+        random_index = random.randint(0,len(similar_clients)-1)
+        
+        if user_has_highly_rated(similar_clients[random_index]):
+            trainer = get_highest_rated_trainer_by_client(similar_clients[random_index])
+            recommended_usernames = get_collaborative_recommendations(trainer.trainer_username)
+
+            recommendations = []
 
             recommendations = []
             for username in recommended_usernames:
                 recommendations.append(get_user(username))
-
+#
             return render_template('trainer-search.html', trainers = get_trainers(), recommendations = recommendations)
+        # Content-Based Recommendations
+        # Checking if the user has rated a trainer highly before to make a content-based recommendation
+        #if user_has_highly_rated(current_user.username):
+        #    liked_trainer = get_highest_rated_trainer_by_client(current_user.username)
+        #    
+        #    recommended_usernames = content_based_recommendation(liked_trainer.trainer_username)
+#
+        #    recommendations = []
+        #    for username in recommended_usernames:
+        #        recommendations.append(get_user(username))
+#
+        #    return render_template('trainer-search.html', trainers = get_trainers(), recommendations = recommendations)
     
         return render_template('trainer-search.html', trainers = get_trainers())
         
@@ -402,6 +421,14 @@ def rate_trainer(uname):
             rating = int(form['rating']),
             comment = form['comment']
         )
+
+        # Add info to csv to make recommendations
+        row_contents = [current_user.username,
+                        uname,
+                        int(form['rating']),
+                        datetime.datetime.now()]
+
+        append_list_as_row('ratings.csv', row_contents)
         
         db.session.add(trainer_review)
         db.session.commit()

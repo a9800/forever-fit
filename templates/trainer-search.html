@@ -91,7 +91,7 @@
             {% if recommendations %}
             
                 <div class="trainer-holder" style="margin-top: 30px;">
-                    <p class="small">Here are some recommendations based on your previous Ratings</p>
+                    <p class="small">Here are some recommendations based the ratings of people similar to you</p>
                     <hr style="width: 100%;">
                     {% for trainer in recommendations %}
                     <div class="trainer-widget" onclick="window.location='/TrainerProfile/{{trainer.username}}'">

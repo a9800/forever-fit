@@ -244,5 +244,8 @@ def get_highest_rated_trainer_by_client(uname):
 def get_amount_reviews(uname):
     return TrainerReview.query.filter_by(trainer_username = uname).count()
 
+def rating_exists(trainee,trainer):
+    return bool(TrainerReview.query.filter_by(trainee_username = trainee, trainer_username = trainer).first())
+
 if __name__ == "__main__":
     db.create_all()
