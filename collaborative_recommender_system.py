@@ -4,15 +4,15 @@ import pandas as pd
 def get_collaborative_recommendations(uname):
     ratings = pd.read_csv('ratings.csv')
 
-    #print(ratings.head())
+    print(ratings.head())
 
     trainers = pd.read_csv('trainers.csv')
 
-    #print(trainers.head())
+    print(trainers.head())
 
     df = pd.merge(ratings,trainers,on="Username")
 
-    #print(df.head())
+    print(df.head())
 
     ratings = pd.DataFrame(df.groupby('Username')['rating'].mean())
 
