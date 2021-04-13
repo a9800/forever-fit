@@ -38,6 +38,10 @@ def get_collaborative_recommendations(uname):
 
     similar_to_ah82 = matrix.corrwith(trainer_rating)
 
+    print('similar to ah82')
+    print(similar_to_ah82.head())
+    print('')
+
     corr_trainer = pd.DataFrame(similar_to_ah82,columns=['Correlations'])
     corr_trainer.dropna(inplace=True)
 
