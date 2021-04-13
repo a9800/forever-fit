@@ -57,7 +57,7 @@ def get_similair_clients(client):
     for client in sorted_scores:
         similar_clients.append(clients_df.iloc[client[0]]['Username'])
         i += 1
-        if i>2:
+        if i>3:
             break
 
     return similar_clients

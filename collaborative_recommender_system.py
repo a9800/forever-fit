@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 
 def get_collaborative_recommendations(uname):
+    print(uname)
+    
     ratings = pd.read_csv('ratings.csv')
 
     print(ratings.head())
