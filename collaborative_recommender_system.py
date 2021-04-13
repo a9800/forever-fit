@@ -25,7 +25,7 @@ def get_collaborative_recommendations(uname):
     print('')
 
     matrix = df.pivot_table(index='client',columns=['Username'],values='rating')
-    matrix.fillna(0)
+    matrix.replace(np.nan,0)
 
     print('matrix')
     print(matrix.head())
