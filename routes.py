@@ -214,32 +214,31 @@ def TrainerSearch(filter,sort):
     
     else:
         # Collaborative Recommendations
-        #similar_clients = get_similair_clients(current_user.username)
-        #random_index = random.randint(0,len(similar_clients)-1)
+        similar_clients = get_similair_clients(current_user.username)
         
-        #if user_has_highly_rated(similar_clients[random_index]):
-        #    trainer = get_highest_rated_trainer_by_client(similar_clients[random_index])
-        #    recommended_usernames = get_collaborative_recommendations(trainer.trainer_username)
-
-        #    recommendations = []
-
-        #    recommendations = []
-        #    for username in recommended_usernames:
-        #        recommendations.append(get_user(username))
-#
-        #    return render_template('trainer-search.html', trainers = get_trainers(), recommendations = recommendations)
-        # Content-Based Recommendations
-        # Checking if the user has rated a trainer highly before to make a content-based recommendation
-        if user_has_highly_rated(current_user.username):
-            liked_trainer = get_highest_rated_trainer_by_client(current_user.username)
+        random_index = random.randint(0,len(similar_clients)-1)
+    
+        if user_has_highly_rated(similar_clients[random_index]):
+            trainer = get_highest_rated_trainer_by_client(similar_clients[random_index])
+            recommended_usernames = get_collaborative_recommendations(trainer.trainer_username)
             
-            recommended_usernames = content_based_recommendation(liked_trainer.trainer_username)
-
             recommendations = []
             for username in recommended_usernames:
                 recommendations.append(get_user(username))
-#
+
             return render_template('trainer-search.html', trainers = get_trainers(), recommendations = recommendations)
+        # Content-Based Recommendations
+        # Checking if the user has rated a trainer highly before to make a content-based recommendation
+        #if user_has_highly_rated(current_user.username):
+        #    liked_trainer = get_highest_rated_trainer_by_client(current_user.username)
+        #    
+        #    recommended_usernames = content_based_recommendation(liked_trainer.trainer_username)
+#
+        #    recommendations = []
+        #    for username in recommended_usernames:
+        #        recommendations.append(get_user(username))
+##
+        #    return render_template('trainer-search.html', trainers = get_trainers(), recommendations = recommendations)
     
         return render_template('trainer-search.html', trainers = get_trainers())
         
