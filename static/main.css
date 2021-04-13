@@ -785,7 +785,7 @@ table{
 }
 
 :root {
-  --gutter: 20px;
+  --gutter: -30px;
 }
 
 .hs {

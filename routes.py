@@ -194,12 +194,14 @@ def Home():
         friends = limit_get_friends(current_user.username,5)
         recent_rooms = get_limit_rooms_by_trainee_id(current_user.username,2)
         upcoming_sessions = get_upcoming_sessions_by_trainee_id(current_user.username,2)
+        trainers = get_trainers_by_trainee(current_user.username)
 
         return render_template('home.html',recent_rooms=recent_rooms,friends=friends,upcoming_sessions=upcoming_sessions,
-                                current_user = current_user)
+                                current_user = current_user,trainers=trainers)
     else:
         recent_rooms = get_limit_rooms_by_trainer_id(current_user.username,2)
         upcoming_sessions = get_upcoming_sessions_by_trainer_id(current_user.username,2)
+        
         
         return render_template('trainer-home.html',recent_rooms=recent_rooms, upcoming_sessions=upcoming_sessions,
                                 current_user = current_user)
@@ -390,7 +392,7 @@ def book_session(uname):
                     date = form['date'],
                     time = form['time'],
                     completed = False,
-                    accepted = True #### CHANGE THIS TO FLASE
+                    accepted = False #### CHANGE THIS TO FLASE
         )
         db.session.add(session)
         db.session.commit()
@@ -564,7 +566,7 @@ def addTrainer(trainer_username):
                                        trainer_username = trainer_username,
                                        trainer_fname = get_user(trainer_username).fname,
                                        trainer_lname = get_user(trainer_username).lname,
-                                       confirmed = True) ### CHANGE TO FALSE
+                                       confirmed = False) ### CHANGE TO FALSE
             db.session.add(user_trainer)
             db.session.commit()
             return redirect('/chat/'+trainer_username)
