@@ -97,6 +97,37 @@
                 </div>
             </div>
             <div class="widget-holder">
+                <div class="widget" style="margin-bottom: 30px;">
+                    <div class="big">Progress</div>
+                    <hr>
+                    <div class="row">
+                        <p class="small">Sessions Completed:{{current_user.sessionsCompleted}}</p>
+                        <p class="small">Level: 1</p>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <p style="position:relative; top:2px" class="small">0</p>
+                        <progress id="file" value="{{current_user.sessionsCompleted}}" max="5"></progress>
+                        <p style="position:relative; top:2px" class="small">5</p>
+                    </div>
+                </div>
+
+                <div class="widget" style="margin-bottom: 30px;">
+                    <div class="big">Progress</div>
+                    <hr>
+                    <div class="row">
+                        <p class="small">Sessions Completed:{{current_user.sessionsCompleted}}</p>
+                        <p class="small">Level: 1</p>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <p style="position:relative; top:2px" class="small">0</p>
+                        <progress id="file" value="{{current_user.sessionsCompleted}}" max="5"></progress>
+                        <p style="position:relative; top:2px" class="small">5</p>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-holder">
                 <div class="widget">
                     <div class="big">Friends</div>
                     <hr>
@@ -133,21 +164,6 @@
                             <td></td>
                         </tr>
                     </table>
-                </div>
-
-                <div class="widget" style="margin-bottom: 30px;">
-                    <div class="big">Progress</div>
-                    <hr>
-                    <div class="row">
-                        <p class="small">Sessions Completed:{{current_user.sessionsCompleted}}</p>
-                        <p class="small">Level: 1</p>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <p style="position:relative; top:2px" class="small">0</p>
-                        <progress id="file" value="{{current_user.sessionsCompleted}}" max="5"></progress>
-                        <p style="position:relative; top:2px" class="small">5</p>
-                    </div>
                 </div>
             </div>
         </main>
