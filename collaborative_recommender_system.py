@@ -3,7 +3,7 @@ import pandas as pd
 
 def get_collaborative_recommendations(uname):
     print(uname)
-    
+
     ratings = pd.read_csv('ratings.csv')
 
     print(ratings.head())
@@ -25,6 +25,7 @@ def get_collaborative_recommendations(uname):
     print('')
 
     matrix = df.pivot_table(index='client',columns=['Username'],values='rating')
+    matrix.fillna(0)
 
     print('matrix')
     print(matrix.head())
@@ -38,13 +39,13 @@ def get_collaborative_recommendations(uname):
     print(trainer_rating.head())
     print('')
 
-    similar_to_ah82 = matrix.corrwith(trainer_rating)
+    similar_to_trainer = matrix.corrwith(trainer_rating)
 
-    print('similar to ah82')
-    print(similar_to_ah82.head())
+    print('similar to trainer')
+    print(similar_to_trainer.head())
     print('')
 
-    corr_trainer = pd.DataFrame(similar_to_ah82,columns=['Correlations'])
+    corr_trainer = pd.DataFrame(similar_to_trainer,columns=['Correlations'])
     corr_trainer.dropna(inplace=True)
 
     print('corr_trainer')
@@ -53,7 +54,7 @@ def get_collaborative_recommendations(uname):
 
     corr_trainer = corr_trainer.join(ratings['num_ratings'])
 
-    corr_trainer = corr_trainer[corr_trainer['num_ratings']>2].sort_values('Correlations',ascending=False).head()
+    corr_trainer = corr_trainer[corr_trainer['num_ratings']>1].sort_values('Correlations',ascending=False).head()
 
     recommended_trainers = []
 
