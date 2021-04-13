@@ -42,5 +42,7 @@ def get_collaborative_recommendations(uname):
         i += 1
         if i>2:
             break
-
+    print(' ')
+    print(recommended_trainers)
+    print(' ')
     return recommended_trainers
