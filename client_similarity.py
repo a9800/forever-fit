@@ -8,10 +8,10 @@ def get_similair_clients(client):
 
     clients_df = pd.read_csv('clients.csv')
     
-    print(clients_df.head())
+    #print(clients_df.head())
     
     # Check for missing values
-    print("Missing values:",clients_df.isnull().values.any())
+    #print("Missing values:",clients_df.isnull().values.any())
     
     # Create a function to combine the values of the columns into a single string
     def get_features(data):
@@ -23,7 +23,7 @@ def get_similair_clients(client):
     
     clients_df['features_concat']=get_features(clients_df)
     
-    print(clients_df.head())
+    #print(clients_df.head())
     
     # Convert Text Into Matrix
     cm = CountVectorizer().fit_transform(clients_df['features_concat'])
@@ -48,7 +48,7 @@ def get_similair_clients(client):
     sorted_scores = sorted(scores, key = lambda x:x[1], reverse = True)
     sorted_scores = sorted_scores[1:]
     
-    print(sorted_scores)
+    #print(sorted_scores)
     similar_clients = []
 
     # return the top 3 trainers with a high recommendation
