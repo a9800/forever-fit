@@ -201,10 +201,12 @@ def Home():
     else:
         recent_rooms = get_limit_rooms_by_trainer_id(current_user.username,2)
         upcoming_sessions = get_upcoming_sessions_by_trainer_id(current_user.username,2)
-        
+        trainees = get_trainees_by_trainer(current_user.username)
+        requests = get_session_requests_by_trainerid(current_user.username)
+        client_requests = get_request_by_trainer(current_user.username)
         
         return render_template('trainer-home.html',recent_rooms=recent_rooms, upcoming_sessions=upcoming_sessions,
-                                current_user = current_user)
+                                current_user = current_user, trainees = trainees, requests = requests, client_requests =client_requests)
 
 @app.route('/TrainerSearch/<filter>&<sort>', methods=['POST','GET'])
 @login_required
@@ -337,21 +339,21 @@ def message(data):
           room = data['room_id'])
 
 
-@app.route('/TrainingSessions')
-@login_required
-def training_sessions():
-    if current_user.isTrainer:
-        trainers = get_trainees_by_trainer(current_user.username)
-        requests = get_session_requests_by_trainerid(current_user.username)
-        client_requests = get_request_by_trainer(current_user.username)
-        sessions = get_sessions_by_trainerid(current_user.username)
-
-        return render_template('training-sessions.html', current_user = current_user, trainers = trainers, requests = requests,
-                                sessions = sessions,client_requests=client_requests)
-    else:
-        trainers = get_trainers_by_trainee(current_user.username)
-        sessions = get_sessions_by_traineeid(current_user.username)
-        return render_template('training-sessions.html', current_user = current_user, trainers = trainers, sessions = sessions)
+#@app.route('/TrainingSessions')
+#@login_required
+#def training_sessions():
+#    if current_user.isTrainer:
+#        trainers = get_trainees_by_trainer(current_user.username)
+#        requests = get_session_requests_by_trainerid(current_user.username)
+#        client_requests = get_request_by_trainer(current_user.username)
+#        sessions = get_sessions_by_trainerid(current_user.username)
+#
+#        return render_template('training-sessions.html', current_user = current_user, trainers = trainers, requests = requests,
+#                                sessions = sessions,client_requests=client_requests)
+#    else:
+#        trainers = get_trainers_by_trainee(current_user.username)
+#        sessions = get_sessions_by_traineeid(current_user.username)
+#        return render_template('training-sessions.html', current_user = current_user, trainers = trainers, sessions = sessions)
 
 @app.route('/client_accept/<id>')
 @login_required
@@ -360,7 +362,7 @@ def client_accept(id):
     user_trainer.confirmed = True
     db.session.commit()
 
-    return redirect('/TrainingSessions')
+    return redirect('/Home')
 
 @app.route('/client_deny/<id>')
 @login_required
@@ -368,7 +370,7 @@ def client_deny(id):
     delete_user_trainer(id)
     db.session.commit()
 
-    return redirect('/TrainingSessions')
+    return redirect('/Home')
 
 @app.route('/BookSession/<uname>',methods=['POST','GET'])
 @login_required
@@ -397,7 +399,7 @@ def book_session(uname):
         db.session.commit()
 
         flash('You have sent '+get_user(uname).fname+' a session request')
-        return redirect('/TrainingSessions')
+        return redirect('/Home')
 
 @app.route('/Rate/<uname>',methods=['POST','GET'])
 @login_required
@@ -406,7 +408,7 @@ def rate_trainer(uname):
         if partnership_exists(current_user.username,uname):
             return render_template('/rate-trainer.html', trainer = get_user(uname))
         else:
-            return redirect('/TrainingSessions')
+            return redirect('/Home')
     
     if request.method == 'POST':
         
@@ -435,7 +437,7 @@ def rate_trainer(uname):
         db.session.commit()
 
         flash('You have successfully reviewed '+get_user(uname).fname)
-        return redirect('/TrainingSessions')
+        return redirect('/Home')
 
 def update_rating(uname,rating):
     curr_rating = get_user(uname).rating
@@ -453,7 +455,7 @@ def session_accept(id):
     session = get_session_requests_by_id(id)
     session.accepted = True
     db.session.commit()
-    return redirect('/TrainingSessions')
+    return redirect('/Home')
 
 @app.route('/session_deny/<id>')
 @login_required
@@ -461,7 +463,7 @@ def session_deny(id):
     delete_session(id)
     db.session.commit()
 
-    return redirect('/TrainingSessions')
+    return redirect('/Home')
     
 @socketio.on('join')
 def join(data):
