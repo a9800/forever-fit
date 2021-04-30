@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="../static/main.css" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet" />
     </head>
 
@@ -50,142 +51,153 @@
                         {% endfor %}
                     {% endif %}
             {% endwith %}
-            <div class="row2" style="margin-top: 30px;">
-                <div class="dropdown" style="background-color: #0c0c0c; margin-bottom: 20px;">
-                    <p class="btn btn-primary dropdown-toggle small friend-btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-chevron-down" style="font-size: 15px;"></i>
-                        Session Requests
-                    </p>
-                    <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
-                        {% if requests %}
-                            {% for request in requests %}
-                                <div class="dropdown-item small" style="padding-bottom: 30px;">
-                                    {{request.trainee_fname}} {{request.trainee_lname}} <br/>
-                                    <p class="smaller">{{request.date}} {{request.time}}</p>
-                                    <div class="session-request">
-                                        <a href="session_accept/{{request.id}}"class="btn btn-primary dropdown-toggle">
-                                            &#10003;
-                                        </a>
-                                        <a href="session_deny/{{request.id}}" class="btn btn-primary dropdown-toggle">
-                                            X
-                                        </a>
+                <div class="row2" style="margin-top: 30px;">
+                    <div class="dropdown" style="background-color: #0c0c0c; margin-bottom: 20px;">
+                        <p onclick="sessionRequests()" class="btn btn-primary dropdown-toggle small friend-btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-chevron-down" style="font-size: 15px;"></i>
+                            Session Requests
+                        </p>
+                        <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+                            <div id="session-requests">
+                            {% if requests %}
+                                {% for request in requests %}
+                                    <div class="dropdown-item small" style="padding-bottom: 30px;">
+                                        {{request.trainee_fname}} {{request.trainee_lname}} <br/>
+                                        <p class="smaller">{{request.date}} {{request.time}}</p>
+                                        <div class="session-request">
+                                            <a href="session_accept/{{request.id}}"class="btn btn-primary dropdown-toggle">
+                                                &#10003;
+                                            </a>
+                                            <a href="session_deny/{{request.id}}" class="btn btn-primary dropdown-toggle">
+                                                X
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <p class="small">No new Session requests</p>
-                        {% endif %}
-                            
+                                {% endfor %}
+                            {% else %}
+                                <p class="small">No new Session requests</p>
+                            {% endif %}
+                            </div>
+                                
+                        </div>
+                    </div>
+
+                    <div class="dropdown" style="background-color: #0c0c0c;">
+                        <p class="btn btn-primary dropdown-toggle small friend-btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-chevron-down" style="font-size: 15px;"></i>
+                            Client Requests
+                        </p>
+                        <div id="client_requests" class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+                            {% if client_requests %}
+                                {% for request in client_requests %}
+                                    <div class="dropdown-item small" style="padding-bottom: 30px;">
+                                        {{request.trainee_fname}} {{request.trainee_lname}} <br/>
+                                        <p class="smaller">{{request.date}} {{request.time}}</p>
+                                        <div class="session-request2">
+                                            <a href="/client_accept/{{request.id}}"class="btn btn-primary dropdown-toggle">
+                                                &#10003;
+                                            </a>
+                                            <a href="/client_deny/{{request.id}}" class="btn btn-primary dropdown-toggle">
+                                                X
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p class="small">No new Session requests</p>
+                            {% endif %}
+                                
+                        </div>
                     </div>
                 </div>
 
-                <div class="dropdown" style="background-color: #0c0c0c;">
-                    <p class="btn btn-primary dropdown-toggle small friend-btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-chevron-down" style="font-size: 15px;"></i>
-                        Client Requests
-                    </p>
-                    <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
-                        {% if client_requests %}
-                            {% for request in client_requests %}
-                                <div class="dropdown-item small" style="padding-bottom: 30px;">
-                                    {{request.trainee_fname}} {{request.trainee_lname}} <br/>
-                                    <p class="smaller">{{request.date}} {{request.time}}</p>
-                                    <div class="session-request2">
-                                        <a href="/client_accept/{{request.id}}"class="btn btn-primary dropdown-toggle">
-                                            &#10003;
-                                        </a>
-                                        <a href="/client_deny/{{request.id}}" class="btn btn-primary dropdown-toggle">
-                                            X
-                                        </a>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <p class="small">No new Session requests</p>
-                        {% endif %}
-                            
-                    </div>
-                </div>
-            </div>
+            <div id="trainer-body">
+                <div id="first_child">
+                <div class=" widget-holder">
+                    <div class="widget">
+                        <div class="big">Upcoming Sessions</div>
+                        <hr>
+                        <ul class="hs" style="padding-left: 0px;">
 
-            <div class=" widget-holder">
-                <div class="widget">
-                    <div class="big">Upcoming Sessions</div>
-                    <hr>
-                    {% if upcoming_sessions %}
-                        <div class="flex-row">
-                            {% for session in upcoming_sessions %}
-                                <div class="home-trainer2">
-                                    <p class="small">{{session.trainee_fname}} {{session.trainee_lname}}</p>
-                                    <div class="flex-row">
-                                        <p class="smaller">{{session.date}} {{session.time}} </p>
-                                        <a href="/Class/{{session.id}}" class="btn btn-primary active btn-right" role="button">
-                                            Join
-                                        </a>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="small">You have no upcoming sessions, set a session up with one of your trainees</div>
-                        <br>
-                    {%endif%}
-                    
-                </div>
-                <div class="widget">
-                    <div class="big">Recent Chats</div>
-                    <hr>
-                    {% if recent_rooms %}
-                        <div class="flex-row">
-                            {% for rooms in recent_rooms %}
-                                <div class="home-trainer2">
-                                    <p class="small">{{rooms.trainee_fname}} {{rooms.trainee_lname}}</p>
-                                    <a href="/chat/{{rooms.trainee_username}}" class="btn btn-primary active btn-right" role="button">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
-                                            <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                                        </svg>
-                                        Message
-                                    </a>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="small">No recent chats, wait for a trainee to spot your profile and send you a message</div>
-                        <br>
-    
-                    {%endif%}
-                </div>
-            </div>
-            <div class="widget-holder">
-                <div class="widget" style="margin-bottom: 30px;">
-                    <div class="big">Your Clients</div>
-                    <hr>
-            
-                    <ul class="hs" style="padding-left: 0px;">
+                            {% if sessions %}
+                                {% for session in sessions %}
+                                    <li class="items home-trainer flex-column">
+                                        <p class="small">{{session.trainee_fname}} {{session.trainee_lname}}</p>
+                                        <hr>
+                                        <div class="flex-row">
+                                            <p class="small">{{session.date}} {{session.time}}</p>
+                                            <a href="/Class/{{session.id}}" class="btn btn-primary active btn-right" role="button">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
+                                                    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                                </svg>
+                                                Join Call
+                                            </a>
+                                        </div> 
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                    <p class="small">You have no upcoming sessions</p>
+                            {% endif %}
+                            
+                        </ul>
                         
-                        {% if trainees %}
-                            {% for trainee in trainees %}
-                                <li class="items home-trainer flex-column">
-                                    <p class="small">{{trainee.trainee_fname}} {{trainee.trainee_lname}}</p>
-                                    <hr>
-                                    <div class="flex-row">
-                                    <a href="/chat/{{trainee.trainee_username}}" class="btn btn-primary active t" role="button">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
-                                            <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                                        </svg>
-                                        Message
-                                    </a>  
-            
-                                    </div>    
-                                </li>
-                            {% endfor %}
+                    </div>
+                    <div class="widget">
+                        <div class="big">Recent Chats</div>
+                        <hr>
+                        {% if recent_rooms %}
+                            <div class="flex-row">
+                                {% for rooms in recent_rooms %}
+                                    <div class="home-trainer2">
+                                        <p class="small">{{rooms.trainee_fname}} {{rooms.trainee_lname}}</p>
+                                        <a href="/chat/{{rooms.trainee_username}}" class="btn btn-primary active btn-right" role="button">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
+                                                <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                            </svg>
+                                            Message
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         {% else %}
-                            <p class="small">You have no Clients, wait for some to send you a request</p>
-                        {% endif %}
-    
-                    </ul>
+                            <div class="small">No recent chats, wait for a trainee to spot your profile and send you a message</div>
+                            <br>
+                        
+                        {%endif%}
+                    </div>
+                </div>
+                <div class="widget-holder">
+                    <div class="widget" style="margin-bottom: 30px;">
+                        <div class="big">Your Clients</div>
+                        <hr>
+                    
+                        <ul class="hs" style="padding-left: 0px;">
+
+                            {% if trainees %}
+                                {% for trainee in trainees %}
+                                    <li class="items home-trainer flex-column">
+                                        <p class="small">{{trainee.trainee_fname}} {{trainee.trainee_lname}}</p>
+                                        <hr>
+                                        <div class="flex-row">
+                                        <a href="/chat/{{trainee.trainee_username}}" class="btn btn-primary active t" role="button">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
+                                                <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                            </svg>
+                                            Message
+                                        </a>  
+                                    
+                                        </div>    
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <p class="small">You have no Clients, wait for some to send you a request</p>
+                            {% endif %}
+                                
+                        </ul>
+                    </div>
                 </div>
 
+                </div>
             </div>
         </main>
         <script>
@@ -198,6 +210,34 @@
                 document.getElementById("mySidebar").style.width = "0";
                 document.getElementById("main").style.marginLeft = "0";
             }
+
+            setInterval(function(){
+                $.ajax({
+                  url: "/RefreshClientRequests",
+                  type: "get",
+                  data: {},
+                  success: function(response) {
+                    var current = document.getElementById("first_child")
+                    const update = document.createElement("div");
+                    update.id = "first_child"
+                    update.innerHTML = response;
+                    
+                    var x = current.isEqualNode(update);
+                
+                    // console.log(x)
+
+                    if(!x){
+                        $("#first_child").html(response);
+                    }
+                  },
+                  error: function(xhr) {
+                   
+                  }
+                });
+            },
+            500);
+
+            
         </script>
     </body>
 </html>

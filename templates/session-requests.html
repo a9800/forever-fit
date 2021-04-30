@@ -1,0 +1,16 @@
+{% if requests %}
+    {% for request in requests %}
+        <div class="dropdown-item small" style="padding-bottom: 30px;">
+            {{request.trainee_fname}} {{request.trainee_lname}} <br/>
+            <p class="smaller">{{request.date}} {{request.time}}</p>
+            <div class="session-request">
+                <a href="session_accept/{{request.id}}"class="btn btn-primary dropdown-toggle">
+                    &#10003;
+                </a>
+                <a href="session_deny/{{request.id}}" class="btn btn-primary dropdown-toggle">
+                    X
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}

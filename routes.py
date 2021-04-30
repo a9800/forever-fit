@@ -1,5 +1,5 @@
 import os
-from flask import Flask, flash, request, render_template, redirect, abort
+from flask import Flask, flash, request, render_template, redirect, abort, jsonify
 from flask_login import current_user, login_user, login_required, logout_user
 from form import *
 from sql_db import *
@@ -193,20 +193,51 @@ def Home():
     if(not current_user.isTrainer):
         friends = limit_get_friends(current_user.username,5)
         recent_rooms = get_limit_rooms_by_trainee_id(current_user.username,2)
-        upcoming_sessions = get_upcoming_sessions_by_trainee_id(current_user.username,2)
+        sessions = get_sessions_by_traineeid(current_user.username)
         trainers = get_trainers_by_trainee(current_user.username)
 
-        return render_template('home.html',recent_rooms=recent_rooms,friends=friends,upcoming_sessions=upcoming_sessions,
+        return render_template('home.html',recent_rooms=recent_rooms,friends=friends,sessions=sessions,
                                 current_user = current_user,trainers=trainers)
     else:
         recent_rooms = get_limit_rooms_by_trainer_id(current_user.username,2)
-        upcoming_sessions = get_upcoming_sessions_by_trainer_id(current_user.username,2)
+        sessions = get_sessions_by_trainerid(current_user.username)
         trainees = get_trainees_by_trainer(current_user.username)
         requests = get_session_requests_by_trainerid(current_user.username)
         client_requests = get_request_by_trainer(current_user.username)
         
-        return render_template('trainer-home.html',recent_rooms=recent_rooms, upcoming_sessions=upcoming_sessions,
+        return render_template('trainer-home.html',recent_rooms=recent_rooms, sessions=sessions,
                                 current_user = current_user, trainees = trainees, requests = requests, client_requests =client_requests)
+
+@app.route('/RefreshClientRequests')
+@login_required
+def RefreshClientRequests():
+    recent_rooms = get_limit_rooms_by_trainer_id(current_user.username,2)
+    sessions = get_sessions_by_trainerid(current_user.username)
+    trainees = get_trainees_by_trainer(current_user.username)
+    requests = get_session_requests_by_trainerid(current_user.username)
+    client_requests = get_request_by_trainer(current_user.username)
+    
+    return render_template('trainer-body-refresh.html',recent_rooms=recent_rooms, sessions=sessions,
+                            current_user = current_user, trainees = trainees, requests = requests, client_requests =client_requests)
+
+@app.route('/RefreshTraineeHome')
+@login_required
+def RefreshTraineeHome():
+    friends = limit_get_friends(current_user.username,5)
+    recent_rooms = get_limit_rooms_by_trainee_id(current_user.username,2)
+    sessions = get_sessions_by_traineeid(current_user.username)
+    trainers = get_trainers_by_trainee(current_user.username)
+
+    return render_template('trainee_body.html',recent_rooms=recent_rooms,friends=friends,sessions=sessions,
+                            current_user = current_user,trainers=trainers)
+    
+@app.route('/sessionRequests')
+@login_required
+def sessionRequests():
+    requests = get_session_requests_by_trainerid(current_user.username)
+
+    return render_template('session-requests.html',requests = requests)
+
 
 @app.route('/TrainerSearch/<filter>&<sort>', methods=['POST','GET'])
 @login_required
@@ -218,10 +249,10 @@ def TrainerSearch(filter,sort):
         # Collaborative Recommendations
         similar_clients = get_similair_clients(current_user.username)
 
-        
         for client in similar_clients:
             if user_has_highly_rated(client):
                 trainer = get_highest_rated_trainer_by_client(client)
+                
                 recommended_usernames = get_collaborative_recommendations(trainer.trainer_username)
 
                 recommendations = []

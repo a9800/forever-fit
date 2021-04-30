@@ -12,6 +12,18 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet" />
+
+        <script>
+            $(document).ready(
+                    function() {
+                        setInterval(function() {
+                            var randomnumber = Math.floor(Math.random() * 100);
+                            $('#show').text(
+                                    'I am getting refreshed every 3 seconds..! Random Number ==> '
+                                            + randomnumber);
+                        }, 3000);
+                    });
+        </script>
     </head>
 
     <body>
@@ -45,6 +57,7 @@
                 <a href="/chats">Chats</a>
                 <a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
             </div>
+
             <div style="margin-top: 30px; padding-left: 20%;padding-right: 20%;">
             {% with messages = get_flashed_messages() %}
                     {% if messages %}
@@ -54,143 +67,146 @@
                     {% endif %}
             {% endwith %}
             </div>
-            <div class=" widget-holder">
-                <div class="widget">
-                    <div class="big">Upcoming Sessions</div>
-                    <hr>
-                    {% if upcoming_sessions %}
-                        <div class="flex-row">
-                            {% for session in upcoming_sessions %}
-                                <div class="home-trainer2">
-                                    <p class="small">{{session.trainer_fname}} {{session.trainer_lname}}</p>
-                                    <div class="flex-row">
-                                        <p class="smaller">{{session.date}} {{session.time}} </p>
-                                        <a href="/Class/{{session.id}}" class="btn btn-primary active btn-right" role="button">
-                                            Join
+            <div id="trainee_body">
+                <div id="first_child">
+                <div class=" widget-holder">
+                    <div class="widget">
+                        <div class="big">Upcoming Sessions</div>
+                        <hr>
+                        <ul class="hs" style="padding-left: 0px;">
+                            {% if sessions %}
+                                {% for session in sessions %}
+                                    <li class="items home-trainer flex-column">
+                                        <p class="small">{{session.trainer_fname}} {{session.trainer_lname}}</p>
+                                        <hr>
+                                        <div class="flex-row">
+                                            <p class="small">{{session.date}} {{session.time}}</p>
+                                            <a href="/Class/{{session.id}}" class="btn btn-primary active btn-right" role="button">
+                                                Join Call
+                                            </a>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <p class="small">You have no upcoming sessions</p>
+                            {% endif %}
+                        </ul>
+                        
+                    </div>
+                    <div class="widget">
+                        <div class="big">Recent Chats</div>
+                        <hr>
+                        {% if recent_rooms %}
+                            <div class="flex-row">
+                                {% for rooms in recent_rooms %}
+                                    <div class="home-trainer2">
+                                        <p class="small">{{rooms.trainer_fname}} {{rooms.trainer_lname}}</p>
+                                        <a href="/chat/{{rooms.trainer_username}}" class="btn btn-primary active btn-right" role="button">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
+                                                <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                            </svg>
+                                            Message
                                         </a>
                                     </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="small">You have no upcoming sessions, book one with one of our trainers</div>
-                        <br>
-                        <a href="/TrainerSearch/filter=None&sort=None" class="btn btn-primary active btn-right" role="button">Trainer Search</a>
-                    {%endif%}
-                    
-                </div>
-                <div class="widget">
-                    <div class="big">Recent Chats</div>
-                    <hr>
-                    {% if recent_rooms %}
-                        <div class="flex-row">
-                            {% for rooms in recent_rooms %}
-                                <div class="home-trainer2">
-                                    <p class="small">{{rooms.trainer_fname}} {{rooms.trainer_lname}}</p>
-                                    <a href="/chat/{{rooms.trainer_username}}" class="btn btn-primary active btn-right" role="button">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
-                                            <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                                        </svg>
-                                        Message
-                                    </a>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="small">No recent chats, pair up with a trainer and start a chat with them</div>
-                        <br>
-                        <a href="/TrainerSearch/filter=None&sort=None" class="btn btn-primary active btn-right" role="button">Trainer Search</a>
-                    {%endif%}
-                </div>
-            </div>
-            <div class="widget-holder">
-                <div class="widget" style="margin-bottom: 30px;">
-                    <div class="big">Your Trainers</div>
-                    <hr>
-            
-                    <ul class="hs" style="padding-left: 0px;">
-                        
-                        {% if trainers %}
-                            {% for trainer in trainers %}
-                                <li class="items home-trainer flex-column">
-                                    <p class="small">{{trainer.trainer_fname}} {{trainer.trainer_lname}}</p>
-                                    <hr>
-                                    <div class="flex-row">
-                                    <a href="/chat/{{trainer.trainer_username}}" class="btn btn-primary active t" role="button">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
-                                            <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                                        </svg>
-                                        Message
-                                    </a>  
-                                    <a href="/BookSession/{{trainer.trainer_username}}" class="btn btn-primary active" role="button">
-                                        Book Session
-                                    </a>
-                                    <a href="/Rate/{{trainer.trainer_username}}" class="btn btn-primary active" role="button">
-                                        Rate
-                                    </a> 
-                                    </div>    
-                                </li>
-                            {% endfor %}
+                                {% endfor %}
+                            </div>
                         {% else %}
-                            <p class="small">You have no Trainers find some through the Trainer Search</p>
-                        {% endif %}
-    
-                    </ul>
-                </div>
-
-                <div class="widget" style="margin-bottom: 30px;">
-                    <div class="big">Progress</div>
-                    <hr>
-                    <div class="row">
-                        <p class="small">Sessions Completed:{{current_user.sessionsCompleted}}</p>
-                        <p class="small">Level: 1</p>
+                            <div class="small">No recent chats, pair up with a trainer and start a chat with them</div>
+                            <br>
+                            <a href="/TrainerSearch/filter=None&sort=None" class="btn btn-primary active btn-right" role="button">Trainer Search</a>
+                        {%endif%}
                     </div>
-                    <br>
-                    <div class="row">
-                        <p style="position:relative; top:2px" class="small">0</p>
-                        <progress id="file" value="{{current_user.sessionsCompleted}}" max="5"></progress>
-                        <p style="position:relative; top:2px" class="small">5</p>
+                </div>
+                <div class="widget-holder">
+                    <div class="widget" style="margin-bottom: 30px;">
+                        <div class="big">Your Trainers</div>
+                        <hr>
+                
+                        <ul class="hs" style="padding-left: 0px;">
+                            
+                            {% if trainers %}
+                                {% for trainer in trainers %}
+                                    <li class="items home-trainer flex-column">
+                                        <p class="small">{{trainer.trainer_fname}} {{trainer.trainer_lname}}</p>
+                                        <hr>
+                                        <div class="flex-row">
+                                        <a href="/chat/{{trainer.trainer_username}}" class="btn btn-primary active t" role="button">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
+                                                <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                            </svg>
+                                            Message
+                                        </a>  
+                                        <a href="/BookSession/{{trainer.trainer_username}}" class="btn btn-primary active" role="button">
+                                            Book Session
+                                        </a>
+                                        <a href="/Rate/{{trainer.trainer_username}}" class="btn btn-primary active" role="button">
+                                            Rate
+                                        </a> 
+                                        </div>    
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <p class="small">You have no Trainers find some through the Trainer Search</p>
+                            {% endif %}
+        
+                        </ul>
+                    </div>
+
+                    <div class="widget" style="margin-bottom: 30px;">
+                        <div class="big">Progress</div>
+                        <hr>
+                        <div class="row">
+                            <p class="small">Sessions Completed:{{current_user.sessionsCompleted}}</p>
+                            <p class="small">Level: 1</p>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <p style="position:relative; top:2px" class="small">0</p>
+                            <progress id="file" value="{{current_user.sessionsCompleted}}" max="5"></progress>
+                            <p style="position:relative; top:2px" class="small">5</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-holder" style="padding-top:0px; margin-bottom: 30px;">
+                    <div class="widget">
+                        <div class="big">Friends</div>
+                        <hr>
+                        <table>
+                            <tr class="top-table">
+                                <th>Rank</th>
+                                <th>Name</th>
+                                <th>Level</th>
+                            </tr>
+                            {% if friends %}
+                                {%for friend in friends%}
+                                    <tr>
+                                        <td class="count"></td>
+                                        
+                                        <td>
+                                        {% if friend.username_1 == current_user.username %}
+                                            {{friend.user2_fname}} {{friend.user2_lname}}
+                                        {% else %}
+                                            {{friend.user1_fname}} {{friend.user1_lname}}
+                                        {% endif %}
+                                        </td>
+                                        <td>1</td>
+                                        
+                                    </tr>
+                                {%endfor%}
+                            {%else%}
+                                <td></td>
+                                <td>You have no friends add some through friend search</td>
+                                <td><a class="btn btn-primary active btn-right">Friends</a></td>
+                            {%endif%}
+                            <tr class="bottom-table">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
-            <div class="widget-holder" style="padding-top:0px; margin-bottom: 30px;">
-                <div class="widget">
-                    <div class="big">Friends</div>
-                    <hr>
-                    <table>
-                        <tr class="top-table">
-                            <th>Rank</th>
-                            <th>Name</th>
-                            <th>Level</th>
-                        </tr>
-                        {% if friends %}
-                            {%for friend in friends%}
-                                <tr>
-                                    <td class="count"></td>
-                                    
-                                    <td>
-                                    {% if friend.username_1 == current_user.username %}
-                                        {{friend.user2_fname}} {{friend.user2_lname}}
-                                    {% else %}
-                                        {{friend.user1_fname}} {{friend.user1_lname}}
-                                    {% endif %}
-                                    </td>
-                                    <td>1</td>
-                                    
-                                </tr>
-                            {%endfor%}
-                        {%else%}
-                            <td></td>
-                            <td>You have no friends add some through friend search</td>
-                            <td><a class="btn btn-primary active btn-right">Friends</a></td>
-                        {%endif%}
-                        <tr class="bottom-table">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </table>
-                </div>
             </div>
         </main>
         <script>
@@ -209,6 +225,34 @@
             for (i = 0; i < x.length; i++){
                 x[i].innerHTML = i + 1;
             }
+
+            setInterval(function(){
+                $.ajax({
+                  url: "/RefreshTraineeHome",
+                  type: "get",
+                  data: {},
+                  success: function(response) {
+                    
+                    var current = document.getElementById("first_child")
+                    const update = document.createElement("div");
+                    update.id = "first_child"
+                    update.innerHTML = response;
+                    
+                    var x = current.isEqualNode(update);
+                
+                    console.log(x)
+
+                    if(!x){
+                        $("#first_child").html(response);
+                    }
+                   
+                  },
+                  error: function(xhr) {
+                    //Do Something to handle error
+                  }
+                });
+            },
+            500);
         </script>
     </body>
 </html>
