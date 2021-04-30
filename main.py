@@ -15,7 +15,7 @@ login = LoginManager()
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///forever-fit.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-socketio = SocketIO(app, cors_allowed_origins=["https://theforever.fit","https://fontawesome.com","https://cdnjs.cloudflare.com"])
+socketio = SocketIO(app, cors_allowed_origins=["https://theforever.fit","https://fontawesome.com","https://cdnjs.cloudflare.com","https://ajax.googleapis.com"])
 
 if __name__ == "__main__":  
     from routes import *
