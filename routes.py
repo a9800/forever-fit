@@ -208,9 +208,9 @@ def Home():
         return render_template('trainer-home.html',recent_rooms=recent_rooms, sessions=sessions,
                                 current_user = current_user, trainees = trainees, requests = requests, client_requests =client_requests)
 
-@app.route('/RefreshClientRequests')
+@app.route('/RefreshTrainerHome')
 @login_required
-def RefreshClientRequests():
+def RefreshTrainerHome():
     recent_rooms = get_limit_rooms_by_trainer_id(current_user.username,2)
     sessions = get_sessions_by_trainerid(current_user.username)
     trainees = get_trainees_by_trainer(current_user.username)
@@ -230,13 +230,6 @@ def RefreshTraineeHome():
 
     return render_template('trainee_body.html',recent_rooms=recent_rooms,friends=friends,sessions=sessions,
                             current_user = current_user,trainers=trainers)
-    
-@app.route('/sessionRequests')
-@login_required
-def sessionRequests():
-    requests = get_session_requests_by_trainerid(current_user.username)
-
-    return render_template('session-requests.html',requests = requests)
 
 
 @app.route('/TrainerSearch/<filter>&<sort>', methods=['POST','GET'])
